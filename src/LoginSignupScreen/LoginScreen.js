@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 const LoginScreen = () => {
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#ff3d00' />
+            <StatusBar backgroundColor='#8B0000' />
 
             <View style={{ paddingVertical: 12, width: '85%', alignSelf: 'center', marginBottom: 10 }}>
                 <Text style={{ alignSelf: "center", fontSize: 28, fontWeight: '700', color: 'black', letterSpacing: 1 }}>
@@ -47,14 +47,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#fff8f2', // Warm background color
+        backgroundColor: '#fff8f2', // Warm background
         width: '100%',
         paddingHorizontal: 20
     },
 
     input: {
         padding: 15,
-        borderColor: '#ff6b6b', // Soft red border
+        borderColor: '#B22222', // Deep red border for premium look
         borderWidth: 1.5,
         borderRadius: 30,
         marginBottom: 20,
@@ -67,13 +67,13 @@ const styles = StyleSheet.create({
     },
 
     loginbutton: {
-        backgroundColor: '#ff3d00', // Vibrant orange-red for a food app
+        backgroundColor: '#8B0000', // Deep maroon for a sophisticated feel
         borderRadius: 30,
         width: '85%',
         alignSelf: 'center',
         paddingVertical: 12,
         elevation: 5, // Stronger shadow for a floating effect
-        shadowColor: '#ff3d00',
+        shadowColor: '#8B0000',
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.3,
         shadowRadius: 10
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     },
 
     signupButton: {
-        backgroundColor: '#ff6b6b', // Light red for signup
+        backgroundColor: '#B22222', // Rich burgundy for signup button
         borderRadius: 25,
         alignSelf: 'center',
         paddingVertical: 10,
