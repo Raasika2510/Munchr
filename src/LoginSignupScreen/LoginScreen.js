@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#8B0000' />
@@ -33,7 +33,7 @@ const LoginScreen = () => {
             <View style={styles.signupContainer}>
                 <Text style={styles.signupText}>New to Munchr?</Text>
                 
-                <TouchableOpacity style={styles.signupButton}>
+                <TouchableOpacity style={styles.signupButton} onPress={() => navigation.navigate('SignUp')}>
                     <Text style={styles.signupButtonText}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
