@@ -1,17 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
+import Headerbar from '../Components/Headerbar';
 
 const HomeScreen = () => {
     return (
       <View style={styles.mainContainer}>
         <StatusBar backgroundColor="#FF3F00" />
   
-        <View style={{ marginTop: 50, borderBottomWidth: 1, borderColor: 'grey' }}>
-          <Text>Icon</Text>
-          <Text>Location</Text>
-        </View>
-  
+        <Headerbar />
         <View style={{ height: 40, borderWidth: 0.6, borderColor: 'red', borderRadius: 25 }}>
           <Text>Search Bar</Text>
         </View>
