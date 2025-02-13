@@ -26,7 +26,7 @@ const LoginScreen = ({navigation}) => {
                 placeholderTextColor="#666"
             />
 
-            <TouchableOpacity style={styles.loginbutton} onPress={() => alert('Login Successful!')}>
+            <TouchableOpacity style={styles.loginbutton} onPress={() => console.log("Login Successful!")}>
                 <Text style={styles.loginbuttontext}>Login</Text>
             </TouchableOpacity>
 

@@ -1,7 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
 import Headerbar from '../Components/Headerbar';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Categories from '../Components/Categories';
+import OfferSlider from '../Components/OfferSlider';
+import CardSlider from '../Components/CardSlider';
 
 const HomeScreen = () => {
     return (
@@ -9,22 +13,13 @@ const HomeScreen = () => {
         <StatusBar backgroundColor="#FF3F00" />
   
         <Headerbar />
-        <View style={{ height: 40, borderWidth: 0.6, borderColor: 'red', borderRadius: 25 }}>
-          <Text>Search Bar</Text>
-        </View>
-  
-        <View>
-          <Text>Categories</Text>
-          <Text>All Categories</Text>
-        </View>
-  
-        <View>
-          <Text>Slider (Offers for user, advertisements)</Text>
-        </View>
-
-        <View>
-            <Text> Foods </Text>
-        </View>
+        <TouchableOpacity style={styles.searchbox}>
+        <AntDesign name="search1" size={24} color="black" style={{color:'#FF3F00'}}/>
+          <Text style = {styles.input}>Search</Text>
+        </TouchableOpacity>
+        <Categories />
+        <OfferSlider />
+        <CardSlider />
       </View>
     );
   };
@@ -36,5 +31,22 @@ const styles = StyleSheet.create({
     mainContainer:{
         flex:1,
         height: '100%'
+    },
+    searchbox:{ 
+      flexDirection:'row',
+      width:'92%',
+      backgroundColor:'white',
+      alignItems:'center',
+      padding:10,
+      marginVertical:10,
+      alignSelf:'center',
+      elevation:2,
+      borderRadius: 20 
+    },
+    input: {
+      marginLeft:10,
+      width:'90%',
+      fontSize:16,
+      color: '#c4c4c4'
     }
 })
