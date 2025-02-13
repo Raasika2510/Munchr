@@ -23,6 +23,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "theme": {
+        "primaryColor": "#8B0000",
+        "secondaryColor": "#B22222",
+        "backgroundColor": "#FFF8F2",
+        "textColor": "#333"
+      }
     }
   }
 }
