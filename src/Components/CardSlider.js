@@ -1,7 +1,7 @@
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
-const CardSlider = () => {
+const CardSlider = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.cardouthead}>
@@ -10,7 +10,7 @@ const CardSlider = () => {
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 
       
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ProductScreen')}>
         <View>
           <Image source={require('../Images/pizza3.jpg')} style={styles.cardimage} />
         </View>

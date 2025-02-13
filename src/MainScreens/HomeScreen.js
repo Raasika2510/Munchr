@@ -7,7 +7,7 @@ import Categories from '../Components/Categories';
 import OfferSlider from '../Components/OfferSlider';
 import CardSlider from '../Components/CardSlider';
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
     return (
       <View style={styles.mainContainer}>
         <StatusBar backgroundColor="#FF3F00" />
@@ -19,7 +19,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
         <Categories />
         <OfferSlider />
-        <CardSlider />
+        <CardSlider navigation = {navigation}/>
       </View>
     );
   };

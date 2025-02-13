@@ -6,6 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
 import AntDesign from '@expo/vector-icons/AntDesign';
+import ProductScreen from '../MainScreens/ProductScreen';
+import UserCartScreen from '../MainScreens/UserCartScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -13,6 +15,7 @@ const Tab = createBottomTabNavigator();
 const HomeStack = () => (
   <Stack.Navigator>
     <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="ProductScreen" component={ProductScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
@@ -26,10 +29,13 @@ const AppStack = () => {
 
           if (route.name === 'Home') {
             iconName = 'home';
-          } else if (route.name === 'Home1') {
+          } else if (route.name === 'Profile') {
             iconName = 'person';
-          } else if (route.name === 'Home2') {
+          } else if (route.name === 'Settings') {
             iconName = 'settings';
+          }
+          else if (route.name === 'Cart'){
+            iconName = 'cart';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -38,8 +44,9 @@ const AppStack = () => {
       })}
     >
       <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
-      <Tab.Screen name="Home1" component={HomeStack} options={{ headerShown: false }} />
-      <Tab.Screen name="Home2" component={HomeStack} options={{ headerShown: false }} />
+      <Tab.Screen name="Profile" component={HomeStack} options={{ headerShown: false }} />
+      <Tab.Screen name="Cart" component={UserCartScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Settings" component={HomeStack} options={{ headerShown: false }} />
       {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
     </Tab.Navigator>
   );
