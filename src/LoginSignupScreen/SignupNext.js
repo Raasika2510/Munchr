@@ -1,117 +1,114 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from "react-native";
+import React from "react";
+import { StatusBar } from "expo-status-bar";
+import theme from "../../theme";
+import { useFonts, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } from "@expo-google-fonts/poppins";
 
 const SignupNext = () => {
-  return (
-          <View style={styles.container}>
-              <StatusBar backgroundColor='#8B0000' />
-  
-              <View style={{ paddingVertical: 12, width: '85%', alignSelf: 'center', marginBottom: 10 }}>
-                  <Text style={{ alignSelf: "center", fontSize: 28, fontWeight: '700', color: 'black', letterSpacing: 1 }}>
-                      USER PROFILE
-                  </Text>
-              </View>
-  
-              <TextInput
-                  placeholder="User Name"
-                  style={styles.input}
-                  placeholderTextColor="#666"
-              />
-              <TextInput
-                  placeholder="Phone Number"
-                  style={styles.input}
-                  placeholderTextColor="#666"
-              />
+    const [fontsLoaded] = useFonts({
+        Poppins_400Regular,
+        Poppins_600SemiBold,
+        Poppins_700Bold
+    });
+
+    if (!fontsLoaded) {
+        return <ActivityIndicator size="large" color={theme.colors.primary} />;
+    }
+
+    return (
+        <View style={styles.container}>
+            <StatusBar backgroundColor={theme.colors.primary} />
+
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>USER PROFILE</Text>
+            </View>
 
             <TextInput
-                  placeholder="Email ID"
-                  style={styles.input}
-                  placeholderTextColor="#666"
-              />
-  
-              <TouchableOpacity style={styles.loginbutton} onPress={() => alert('Welcome Aboard ;)')}>
-                  <Text style={styles.loginbuttontext}>Become a Munchr</Text>
-              </TouchableOpacity>
-  
-              
-          </View>
-      );
-  };
-  
+                placeholder="User Name"
+                style={styles.input}
+                placeholderTextColor={theme.colors.placeholder}
+            />
+            <TextInput
+                placeholder="Phone Number"
+                keyboardType="phone-pad"
+                style={styles.input}
+                placeholderTextColor={theme.colors.placeholder}
+            />
+            <TextInput
+                placeholder="Email ID"
+                keyboardType="email-address"
+                style={styles.input}
+                placeholderTextColor={theme.colors.placeholder}
+            />
 
-export default SignupNext
+            <TouchableOpacity style={styles.signupButton} onPress={() => alert("Welcome Aboard 😉")}>
+                <Text style={styles.signupButtonText}>Become a Munchr</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
+
+export default SignupNext;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        backgroundColor: '#fff8f2', // Warm background
-        width: '100%',
+        justifyContent: "center",
+        backgroundColor: theme.colors.background,
+        width: "100%",
         paddingHorizontal: 20
+    },
+
+    titleContainer: {
+        paddingVertical: 12,
+        width: "85%",
+        alignSelf: "center",
+        marginBottom: 10
+    },
+
+    title: {
+        alignSelf: "center",
+        fontSize: 28,
+        fontWeight: "700",
+        color: theme.colors.text,
+        letterSpacing: 1,
+        fontFamily: "Poppins_700Bold"
     },
 
     input: {
         padding: 15,
-        borderColor: '#B22222', // Deep red border for premium look
+        borderColor: theme.colors.secondary,
         borderWidth: 1.5,
         borderRadius: 30,
         marginBottom: 20,
-        width: '90%',
-        alignSelf: 'center',
-        backgroundColor: 'white',
-        elevation: 3, // Light shadow for depth
+        width: "90%",
+        alignSelf: "center",
+        backgroundColor: "white",
+        elevation: 3,
         fontSize: 16,
-        color: '#333',
+        color: theme.colors.text,
+        fontFamily: "Poppins_400Regular"
     },
 
-    loginbutton: {
-        backgroundColor: '#8B0000', // Deep maroon for a sophisticated feel
+    signupButton: {
+        backgroundColor: theme.colors.primary,
         borderRadius: 30,
-        width: '85%',
-        alignSelf: 'center',
+        width: "85%",
+        alignSelf: "center",
         paddingVertical: 12,
-        elevation: 5, // Stronger shadow for a floating effect
-        shadowColor: '#8B0000',
+        elevation: 5,
+        shadowColor: theme.colors.primary,
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.3,
         shadowRadius: 10
     },
 
-    loginbuttontext: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'white',
-        alignSelf: 'center',
-        letterSpacing: 1, // Stylish text spacing
-    },
-
-    signupContainer: {
-        marginTop: 15,
-        width: '95%',
-        alignSelf: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-
-    signupText: {
-        fontSize: 16,
-        color: '#444'
-    },
-
-    signupButton: {
-        backgroundColor: '#B22222', // Rich burgundy for signup button
-        borderRadius: 25,
-        alignSelf: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        elevation: 4
-    },
-
     signupButtonText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'white'
+        fontSize: 18,
+        fontWeight: "bold",
+        color: theme.colors.buttonText,
+        alignSelf: "center",
+        letterSpacing: 1,
+        fontFamily: "Poppins_700Bold"
     }
 });

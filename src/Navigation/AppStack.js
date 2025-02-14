@@ -8,6 +8,9 @@ import { StyleSheet } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import ProductScreen from '../MainScreens/ProductScreen';
 import UserCartScreen from '../MainScreens/UserCartScreen';
+import TrackOrderScreen from '../MainScreens/TrackOrderScreen';
+import UserProfile from '../MainScreens/UserProfile';
+import AccountAndSettings from '../MainScreens/AccountAndSettings';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,6 +40,9 @@ const AppStack = () => {
           else if (route.name === 'Cart'){
             iconName = 'cart';
           }
+          else if (route.name === 'Orders'){
+            iconName = 'map';
+          }
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -44,10 +50,10 @@ const AppStack = () => {
       })}
     >
       <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
-      <Tab.Screen name="Profile" component={HomeStack} options={{ headerShown: false }} />
       <Tab.Screen name="Cart" component={UserCartScreen} options={{ headerShown: false }} />
-      <Tab.Screen name="Settings" component={HomeStack} options={{ headerShown: false }} />
-      {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
+      <Tab.Screen name="Profile" component={UserProfile} options={{ headerShown: false }} />
+      <Tab.Screen name="Orders" component={TrackOrderScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Settings" component={AccountAndSettings} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 };
