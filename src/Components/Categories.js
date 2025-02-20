@@ -3,7 +3,7 @@ import React from 'react'
 const Categories = () => {
   return (
     <View style ={styles.container}>
-      <Text style={styles.head}>categories</Text>
+      <Text style={styles.head}>Catergories</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <TouchableOpacity style={[styles.box, {backgroundColor:'#f5e5ff'}]}>
             <Image source={require('../Images/icon_1.jpg')} style={styles.image}/>

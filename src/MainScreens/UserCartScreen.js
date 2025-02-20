@@ -1,13 +1,13 @@
 import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
-import React from 'react'
-
+import React from 'react';
+import theme from '../../theme';
 
 const UserCartScreen = () => {
     return (
         <View style={styles.mainContainer}>
-            <View style={{ backgroundColor: '#FF3F00', paddingVertical: 15, paddingHorizontal: 15, marginTop: 30 }}>
+            <View style={{ backgroundColor: theme.colors.primary, paddingVertical: 15, paddingHorizontal: 15, marginTop: 30 }}>
                 <TouchableOpacity>
-                    <Text style={{ fontSize: 16, color: 'white' }}>Close</Text>
+                    <Text style={{ fontSize: 16, color: theme.colors.buttonText }}>Close</Text>
                 </TouchableOpacity>
             </View>
 
@@ -21,7 +21,7 @@ const UserCartScreen = () => {
                     
                     <View style={styles.containerCard_in}>
                     <View style={styles.containerCard_in1}>
-                        <Text>Hera Dhaba</Text>
+                        <Text style={styles.text}>Hera Dhaba</Text>
                     </View>
 
                     <View style={styles.containerCard_in2}>
@@ -32,27 +32,27 @@ const UserCartScreen = () => {
 
                     <View style={styles.containerCard_in3}>
                         <TouchableOpacity style={styles.containerCard_in3_btn}>
-                            <Text style = {styles.containerCard_in3_btn_txt}>Delete</Text>
+                            <Text style={styles.containerCard_in3_btn_txt}>Delete</Text>
                         </TouchableOpacity>
                     </View>
                     </View>
                 </View>
             </View>
         </View>
-    )
-}
+    );
+};
 
-
-export default UserCartScreen
+export default UserCartScreen;
 
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         width: '100%',
+        backgroundColor: theme.colors.background
     },
     container: {
         flex: 1,
-        backgroundColor: '#edeef0',
+        backgroundColor: theme.colors.background,
         width: '100%',
     },
     containerHead: {
@@ -61,10 +61,12 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         marginLeft: 5,
         paddingHorizontal: 10,
+        color: theme.colors.text,
+        fontFamily: theme.fonts.bold
     },
     containerCard: {
         flexDirection: 'row',
-        backgroundColor: 'white',
+        backgroundColor: theme.colors.cardBackground,
         marginVertical: 5,
         borderRadius: 25,
         width: '95%',
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 100,
         borderRadius: 20,
-        backgroundColor: '#edeef0',
+        backgroundColor: theme.colors.background,
         marginVertical: 5,
         padding: 5,
         elevation: 2
@@ -114,15 +116,21 @@ const styles = StyleSheet.create({
     containerCard_in2_itemName: {
         fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 3
+        marginBottom: 3,
+        color: theme.colors.text,
+        fontFamily: theme.fonts.semiBold
     },
     containerCard_in2_itemPrice: {
         fontSize: 14,
         fontWeight: '600',
-        marginBottom: 2
+        marginBottom: 2,
+        color: theme.colors.text,
+        fontFamily: theme.fonts.regular
     },
     containerCard_in3_btn_txt: {
         fontSize: 16,
         fontWeight: 'bold',
+        color: theme.colors.primary,
+        fontFamily: theme.fonts.bold
     },
-})
+});
