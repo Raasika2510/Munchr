@@ -18,12 +18,12 @@ const TrackOrderScreen = () => {
             
             <View style={styles.orderItemContainer}>
               <View>
-                <Image source={require('../Images/pizza2.jpg')} style={styles.cardimage} />
+                <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
               </View>
             <View style={styles.orderItemContainer_2}>
               <View>
-                <Text style={styles.orderItemName}> Pizza </Text>
-                <Text> $ 150 </Text>
+                <Text style={styles.orderItemName}> Indian Thali </Text>
+                <Text> $ 290 </Text>
                 <Text> Qty: 1 unit </Text>
               </View>
             </View>
@@ -35,8 +35,8 @@ const TrackOrderScreen = () => {
               </View>
             <View style={styles.orderItemContainer_2}>
               <View>
-                <Text style={styles.orderItemName}> Pizza Toppings </Text>
-                <Text> $ 350 </Text>
+                <Text style={styles.orderItemName}> Pizza  </Text>
+                <Text> $ 150 </Text>
                 <Text> Qty: 1 unit </Text>
               </View>
             </View>
@@ -44,18 +44,18 @@ const TrackOrderScreen = () => {
 
             <View style={styles.orderItemContainer}>
               <View>
-                <Image source={require('../Images/pizza3.jpg')} style={styles.cardimage} />
+                <Image source={require('../Images/mojito.jpg')} style={styles.cardimage} />
               </View>
             <View style={styles.orderItemContainer_2}>
               <View>
-                <Text style={styles.orderItemName}> Pizza Samosa </Text>
+                <Text style={styles.orderItemName}> Virgin Mojito </Text>
                 <Text> $ 50 </Text>
-                <Text> Qty: 1 unit </Text>
+                <Text> Qty: 2 unit </Text>
               </View>
             </View>
             </View>
 
-            <Text style={styles.orderTotal}>Total : 300$</Text>
+            <Text style={styles.orderTotal}>Total : $490</Text>
           </View>
         </ScrollView>
 

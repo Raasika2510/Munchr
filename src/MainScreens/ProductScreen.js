@@ -13,18 +13,18 @@ const ProductScreen = () => {
 
       <View style={styles.containerIn}>
         <View style={styles.containerIn1}>
-          <Image source={require('../Images/pizza2.jpg')} style={styles.cardimage} />
+          <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
         </View>
 
         <View style={styles.containerIn2}>
     <View style={styles.containerIn2_s1}>
-        <Text style={styles.containerIn2_s1_foodname}>Pizza</Text>
-        <Text style={styles.containerIn2_s1_foodprice}>Rs. 90</Text>
+        <Text style={styles.containerIn2_s1_foodname}>Indian Thali set</Text>
+        <Text style={styles.containerIn2_s1_foodprice}>Rs. 290</Text>
     </View>
 
     <View style={styles.containerIn2_s2}>
         <Text style={styles.containerIn2_s2_head}>About item:</Text>
-        <Text style={styles.containerIn2_s2_description}>Mozzarella cheese pizza is a classic favorite known for its gooey, stretchy cheese and rich, savory flavor.</Text>
+        <Text style={styles.containerIn2_s2_description}>Indian Thali – A wholesome platter featuring a delightful mix of flavors! Enjoy a balanced meal with rice, roti, dal, sabzi, curd, pickle, and a sweet treat, all served on a single plate. A true taste of India in every bite! 🍛🥗✨</Text>
         <Text style={styles.containerIn2_s2_veg}>VEG</Text>
     </View>
 
