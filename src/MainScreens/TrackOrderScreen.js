@@ -21,10 +21,18 @@ const TrackOrderScreen = () => {
               <View>
                 <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
               </View>
+<<<<<<< HEAD
               <View style={styles.orderItemContainer_2}>
                 <Text style={styles.orderItemName}>Pizza</Text>
                 <Text style={styles.orderPrice}>$ 150</Text>
                 <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
+=======
+            <View style={styles.orderItemContainer_2}>
+              <View>
+                <Text style={styles.orderItemName}> Indian Thali </Text>
+                <Text> $ 290 </Text>
+                <Text> Qty: 1 unit </Text>
+>>>>>>> 9bcd9c3000cb99073545bc8670cbcddeb936dbc3
               </View>
             </View>
 
@@ -32,10 +40,18 @@ const TrackOrderScreen = () => {
               <View>
                 <Image source={require('../Images/pizza1.jpg')} style={styles.cardimage} />
               </View>
+<<<<<<< HEAD
               <View style={styles.orderItemContainer_2}>
                 <Text style={styles.orderItemName}>Pizza Toppings</Text>
                 <Text style={styles.orderPrice}>$ 350</Text>
                 <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
+=======
+            <View style={styles.orderItemContainer_2}>
+              <View>
+                <Text style={styles.orderItemName}> Pizza  </Text>
+                <Text> $ 150 </Text>
+                <Text> Qty: 1 unit </Text>
+>>>>>>> 9bcd9c3000cb99073545bc8670cbcddeb936dbc3
               </View>
             </View>
 
@@ -43,14 +59,26 @@ const TrackOrderScreen = () => {
               <View>
                 <Image source={require('../Images/mojito.jpg')} style={styles.cardimage} />
               </View>
+<<<<<<< HEAD
               <View style={styles.orderItemContainer_2}>
                 <Text style={styles.orderItemName}>Pizza Samosa</Text>
                 <Text style={styles.orderPrice}>$ 50</Text>
                 <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
+=======
+            <View style={styles.orderItemContainer_2}>
+              <View>
+                <Text style={styles.orderItemName}> Virgin Mojito </Text>
+                <Text> $ 50 </Text>
+                <Text> Qty: 2 unit </Text>
+>>>>>>> 9bcd9c3000cb99073545bc8670cbcddeb936dbc3
               </View>
             </View>
 
+<<<<<<< HEAD
             <Text style={styles.orderTotal}>Total: $300</Text>
+=======
+            <Text style={styles.orderTotal}>Total : $490</Text>
+>>>>>>> 9bcd9c3000cb99073545bc8670cbcddeb936dbc3
           </View>
         </ScrollView>
     </View>

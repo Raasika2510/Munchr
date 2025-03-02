@@ -18,6 +18,7 @@ const ProductScreen = () => {
         </View>
 
         <View style={styles.containerIn2}>
+<<<<<<< HEAD
           <View style={styles.containerIn2_s1}>
             <Text style={styles.containerIn2_s1_foodname}>Pizza</Text>
             <Text style={styles.containerIn2_s1_foodprice}>Rs. 90</Text>
@@ -30,6 +31,18 @@ const ProductScreen = () => {
             </Text>
             <Text style={styles.containerIn2_s2_veg}>VEG</Text>
           </View>
+=======
+    <View style={styles.containerIn2_s1}>
+        <Text style={styles.containerIn2_s1_foodname}>Indian Thali set</Text>
+        <Text style={styles.containerIn2_s1_foodprice}>Rs. 290</Text>
+    </View>
+
+    <View style={styles.containerIn2_s2}>
+        <Text style={styles.containerIn2_s2_head}>About item:</Text>
+        <Text style={styles.containerIn2_s2_description}>Indian Thali – A wholesome platter featuring a delightful mix of flavors! Enjoy a balanced meal with rice, roti, dal, sabzi, curd, pickle, and a sweet treat, all served on a single plate. A true taste of India in every bite! 🍛🥗✨</Text>
+        <Text style={styles.containerIn2_s2_veg}>VEG</Text>
+    </View>
+>>>>>>> 9bcd9c3000cb99073545bc8670cbcddeb936dbc3
 
           <View style={styles.containerIn2_s3}>
             <Text style={styles.containerIn2_s3_restaurantnameheading}>Restaurant Name:</Text>
