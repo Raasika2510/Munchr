@@ -5,85 +5,58 @@ import theme from '../../theme';
 const TrackOrderScreen = () => {
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity>
-            <Text style={styles.closeText}>Close</Text>
-          </TouchableOpacity>
-        </View>
+      {/* Header Section */}
+      <View style={styles.header}>
+        <TouchableOpacity>
+          <Text style={styles.closeText}>Close</Text>
+        </TouchableOpacity>
+      </View>
 
-        <ScrollView>
-          <Text style={styles.mainHeading}>My Orders</Text>
-          <View style={styles.mainContainer}>
-            <Text style={styles.orderId}>Order id : 4455545ad</Text>
-            <Text style={styles.orderTime}>Time : 4:10 AM</Text>
-            
-            <View style={styles.orderItemContainer}>
-              <View>
-                <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
-              </View>
-<<<<<<< HEAD
-              <View style={styles.orderItemContainer_2}>
-                <Text style={styles.orderItemName}>Pizza</Text>
-                <Text style={styles.orderPrice}>$ 150</Text>
-                <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
-=======
+      <ScrollView>
+        <Text style={styles.mainHeading}>My Orders</Text>
+        
+        {/* Order Container */}
+        <View style={styles.mainContainer}>
+          <Text style={styles.orderId}>Order id : 4455545ad</Text>
+          <Text style={styles.orderTime}>Time : 4:10 AM</Text>
+
+          {/* Order Item 1 */}
+          <View style={styles.orderItemContainer}>
+            <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
             <View style={styles.orderItemContainer_2}>
-              <View>
-                <Text style={styles.orderItemName}> Indian Thali </Text>
-                <Text> $ 290 </Text>
-                <Text> Qty: 1 unit </Text>
->>>>>>> 9bcd9c3000cb99073545bc8670cbcddeb936dbc3
-              </View>
+              <Text style={styles.orderItemName}>Indian Thali</Text>
+              <Text style={styles.orderPrice}>$ 290</Text>
+              <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
             </View>
-
-            <View style={styles.orderItemContainer}>
-              <View>
-                <Image source={require('../Images/pizza1.jpg')} style={styles.cardimage} />
-              </View>
-<<<<<<< HEAD
-              <View style={styles.orderItemContainer_2}>
-                <Text style={styles.orderItemName}>Pizza Toppings</Text>
-                <Text style={styles.orderPrice}>$ 350</Text>
-                <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
-=======
-            <View style={styles.orderItemContainer_2}>
-              <View>
-                <Text style={styles.orderItemName}> Pizza  </Text>
-                <Text> $ 150 </Text>
-                <Text> Qty: 1 unit </Text>
->>>>>>> 9bcd9c3000cb99073545bc8670cbcddeb936dbc3
-              </View>
-            </View>
-
-            <View style={styles.orderItemContainer}>
-              <View>
-                <Image source={require('../Images/mojito.jpg')} style={styles.cardimage} />
-              </View>
-<<<<<<< HEAD
-              <View style={styles.orderItemContainer_2}>
-                <Text style={styles.orderItemName}>Pizza Samosa</Text>
-                <Text style={styles.orderPrice}>$ 50</Text>
-                <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
-=======
-            <View style={styles.orderItemContainer_2}>
-              <View>
-                <Text style={styles.orderItemName}> Virgin Mojito </Text>
-                <Text> $ 50 </Text>
-                <Text> Qty: 2 unit </Text>
->>>>>>> 9bcd9c3000cb99073545bc8670cbcddeb936dbc3
-              </View>
-            </View>
-
-<<<<<<< HEAD
-            <Text style={styles.orderTotal}>Total: $300</Text>
-=======
-            <Text style={styles.orderTotal}>Total : $490</Text>
->>>>>>> 9bcd9c3000cb99073545bc8670cbcddeb936dbc3
           </View>
-        </ScrollView>
+
+          {/* Order Item 2 */}
+          <View style={styles.orderItemContainer}>
+            <Image source={require('../Images/pizza1.jpg')} style={styles.cardimage} />
+            <View style={styles.orderItemContainer_2}>
+              <Text style={styles.orderItemName}>Pizza</Text>
+              <Text style={styles.orderPrice}>$ 150</Text>
+              <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
+            </View>
+          </View>
+
+          {/* Order Item 3 */}
+          <View style={styles.orderItemContainer}>
+            <Image source={require('../Images/mojito.jpg')} style={styles.cardimage} />
+            <View style={styles.orderItemContainer_2}>
+              <Text style={styles.orderItemName}>Virgin Mojito</Text>
+              <Text style={styles.orderPrice}>$ 50</Text>
+              <Text style={styles.orderQuantity}>Qty: 2 units</Text>
+            </View>
+          </View>
+
+          {/* Order Total */}
+          <Text style={styles.orderTotal}>Total: $490</Text>
+        </View>
+      </ScrollView>
     </View>
-  )
-}
+  );
+};
 
 export default TrackOrderScreen;
 
@@ -108,7 +81,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontFamily: theme.fonts.bold,
     color: theme.colors.text,
-  },  
+  },
   mainContainer: {
     marginBottom: 10,
     marginHorizontal: 10,
@@ -145,12 +118,13 @@ const styles = StyleSheet.create({
   },
   orderItemContainer: {
     flexDirection: 'row',
-    backgroundColor: theme.colors.background, 
-    marginVertical: 2, 
-    width: '95%', 
-    alignSelf: 'center', 
-    borderRadius: 20, 
+    backgroundColor: theme.colors.background,
+    marginVertical: 2,
+    width: '95%',
+    alignSelf: 'center',
+    borderRadius: 20,
     elevation: 2,
+    padding: 10,
   },
   orderItemContainer_2: {
     paddingHorizontal: 10,
