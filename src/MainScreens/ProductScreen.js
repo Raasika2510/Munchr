@@ -14,7 +14,7 @@ const ProductScreen = () => {
 
       <View style={styles.containerIn}>
         <View style={styles.containerIn1}>
-          <Image source={require('../Images/pizza2.jpg')} style={styles.cardimage} />
+          <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
         </View>
 
         <View style={styles.containerIn2}>

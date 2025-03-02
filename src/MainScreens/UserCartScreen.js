@@ -17,7 +17,7 @@ const UserCartScreen = () => {
 
             <View style={styles.containerCardList}>
                 <View style={styles.containerCard}>
-                    <Image source={require('../Images/pizza2.jpg')} style={styles.cardimage} />
+                    <Image source={require('../Images/spaghetti.jpg')} style={styles.cardimage} />
                     
                     <View style={styles.containerCard_in}>
                     <View style={styles.containerCard_in1}>
@@ -25,9 +25,9 @@ const UserCartScreen = () => {
                     </View>
 
                     <View style={styles.containerCard_in2}>
-                        <Text style={styles.containerCard_in2_itemName}>Samosa</Text>
-                        <Text style={styles.containerCard_in2_itemPrice}>Rs.50 each</Text>
-                        <Text style={styles.containerCard_in2_itemQty}>Quantity: 1</Text>
+                        <Text style={styles.containerCard_in2_itemName}>spaghetti</Text>
+                        <Text style={styles.containerCard_in2_itemPrice}>Rs.180 each</Text>
+                        <Text style={styles.containerCard_in2_itemQty}>Qty: 1</Text>
                     </View>
 
                     <View style={styles.containerCard_in3}>

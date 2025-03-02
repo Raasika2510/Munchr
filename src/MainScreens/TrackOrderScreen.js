@@ -19,7 +19,7 @@ const TrackOrderScreen = () => {
             
             <View style={styles.orderItemContainer}>
               <View>
-                <Image source={require('../Images/pizza2.jpg')} style={styles.cardimage} />
+                <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
               </View>
               <View style={styles.orderItemContainer_2}>
                 <Text style={styles.orderItemName}>Pizza</Text>
@@ -41,7 +41,7 @@ const TrackOrderScreen = () => {
 
             <View style={styles.orderItemContainer}>
               <View>
-                <Image source={require('../Images/pizza3.jpg')} style={styles.cardimage} />
+                <Image source={require('../Images/mojito.jpg')} style={styles.cardimage} />
               </View>
               <View style={styles.orderItemContainer_2}>
                 <Text style={styles.orderItemName}>Pizza Samosa</Text>

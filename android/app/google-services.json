@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "675916206139",
+    "project_id": "munchr-6100e",
+    "storage_bucket": "munchr-6100e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675916206139:android:baeb53f63e9579724dcc1e",
+        "android_client_info": {
+          "package_name": "in.munchr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNGb5H0zq1YoQlmPxQWUyO6P1T9gv_4oQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

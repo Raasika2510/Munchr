@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#8B0000"
-      }
+      },
+      "package": "com.anonymous.Munchr"
     },
     "web": {
       "favicon": "./assets/favicon.png"

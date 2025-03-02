@@ -4,15 +4,14 @@ import LoginScreen from './src/LoginSignupScreen/LoginScreen';
 import SignScreen from './src/LoginSignupScreen/SignScreen';
 import SignupNext from './src/LoginSignupScreen/SignupNext';
 import AppNav from './src/Navigation/AppNav';
+import { AuthProvider } from './src/Context/AuthContext';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      {/* <StatusBar style="auto" /> */}
-      {/* <LoginScreen /> */}
-      {/* <SignScreen /> */}
-      {/* <SignupNext /> */}
-      <AppNav />
+      <AuthProvider> 
+        <AppNav />
+      </AuthProvider>
     </View>
   );
 }

@@ -9,46 +9,46 @@ const CardSlider = ({navigation}) => {
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 
-      
       <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ProductScreen')}>
         <View>
-          <Image source={require('../Images/pizza3.jpg')} style={styles.cardimage} />
+          <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
         </View>
 
       <View style={styles.cardin1}>
-        <Text style={styles.cardin1txt}>Pizza</Text>
+        <Text style={styles.cardin1txt}>Indian Thali</Text>
 
         <View style={styles.cardin2}>
-          <Text style={styles.cardin2txt1}>Fast Food</Text>
+          <Text style={styles.cardin2txt1}>Indian Food</Text>
           <Text style={styles.cardin2txt1}>Price - 
-            <Text style={{textDecorationLine: 'line-through'}}>100Rs</Text>
-            <Text> 90Rs</Text>
+            <Text style={{textDecorationLine: 'line-through'}}>300Rs</Text>
+            <Text> 290Rs</Text>
           </Text>
           <Text style={styles.cardin2txt3}>VEG</Text>
         </View>
       </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card}>
+
+      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ProductScreen')}>
         <View>
-          <Image source={require('../Images/pizza2.jpg')} style={styles.cardimage} />
+          <Image source={require('../Images/briyani.jpg')} style={styles.cardimage} />
         </View>
 
       <View style={styles.cardin1}>
-        <Text style={styles.cardin1txt}>Pizza</Text>
+        <Text style={styles.cardin1txt}>Chicken Briyani</Text>
 
         <View style={styles.cardin2}>
-          <Text style={styles.cardin2txt1}>Fast Food</Text>
+          <Text style={styles.cardin2txt1}>Indian Food</Text>
           <Text style={styles.cardin2txt1}>Price - 
             <Text style={{textDecorationLine: 'line-through'}}>200Rs</Text>
             <Text> 190Rs</Text>
           </Text>
-          <Text style={styles.cardin2txt3}>VEG</Text>
+          <Text style={styles.cardin2txt2}>Non-Veg</Text>
         </View>
       </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ProductScreen')}>
         <View>
           <Image source={require('../Images/pizza1.jpg')} style={styles.cardimage} />
         </View>
@@ -57,10 +57,29 @@ const CardSlider = ({navigation}) => {
         <Text style={styles.cardin1txt}>Pizza</Text>
 
         <View style={styles.cardin2}>
-          <Text style={styles.cardin2txt1}>Fast Food</Text>
+          <Text style={styles.cardin2txt1}>Italian Food</Text>
           <Text style={styles.cardin2txt1}>Price - 
             <Text style={{textDecorationLine: 'line-through'}}>300Rs</Text>
             <Text> 290Rs</Text>
+          </Text>
+          <Text style={styles.cardin2txt3}>Non-VEG</Text>
+        </View>
+      </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ProductScreen')}>
+        <View>
+          <Image source={require('../Images/sesame.jpg')} style={styles.cardimage} />
+        </View>
+
+      <View style={styles.cardin1}>
+        <Text style={styles.cardin1txt}>Chicken Noodles</Text>
+
+        <View style={styles.cardin2}>
+          <Text style={styles.cardin2txt1}>Chinese Food</Text>
+          <Text style={styles.cardin2txt1}>Price - 
+            <Text style={{textDecorationLine: 'line-through'}}>200Rs</Text>
+            <Text> 150Rs</Text>
           </Text>
           <Text style={styles.cardin2txt3}>VEG</Text>
         </View>
@@ -137,11 +156,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     paddingHorizontal: 4,
+  },
+  cardin2txt2: {
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#9E0D0E',
+    fontSize: 10,
+    fontWeight: '500',
+    color: 'white',
+    textAlign: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4
   }
-  
-  
-  
-
 })
 
 

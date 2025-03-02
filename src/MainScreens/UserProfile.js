@@ -1,10 +1,36 @@
 import { StyleSheet, Text, View, TextInput } from 'react-native';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { TouchableOpacity } from 'react-native';
 import theme from '../../theme';
+import { firebase } from '../Firebase/FirebaseConfig';
+import { AuthContext } from '../Context/AuthContext';
 
 const UserProfile = () => {
+    const { data1 } = useContext(AuthContext);
+      console.log('context Data', data1)
+    const handleData = async () => {
+      const docref = firebase.firestore().collection('UserProfiles')
+      const doc1 = await docref.get()
+
+    //   if(doc.empty) {
+    //     console.log('ok Done')
+    //   }
+    //}
+
+    if (!doc1.empty) {
+      doc.forEach((doc) => {
+          const data = doc.data();
+          console.log('ok Done 1', data);
+          // You can access the fields in 'data' now.
+      });
+  } else {
+      console.log('No documents found.');
+  }
+  }
+    useEffect( () => {
+      handleData()
+    }, [])
   return (
     <View style={styles.container}>
       <View style={styles.header}>
