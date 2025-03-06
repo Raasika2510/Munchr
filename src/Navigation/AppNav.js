@@ -5,6 +5,7 @@ import AuthStack from './AuthStack';
 const AppNav = () => {
   return (
     <NavigationContainer>
+
       {/* <AppStack />  */}
       <AuthStack />
     </NavigationContainer>
