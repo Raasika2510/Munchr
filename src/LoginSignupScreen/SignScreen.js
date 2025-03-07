@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
 import { useFonts, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } from "@expo-google-fonts/poppins";
 import { FontAwesome } from "@expo/vector-icons";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import theme from "../../theme"; // Ensure `theme.js` exists and is correctly exported
 
-const SignScreen = () => {
+
+const SignScreen = ({ navigation}) => {
+    const{ userloggeduidHandler } = useContext(AuthContext);
     const [fontsLoaded] = useFonts({
         Poppins_400Regular,
         Poppins_600SemiBold,
@@ -31,9 +33,10 @@ const SignScreen = () => {
 
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            console.log("Account created successfully:", userCredential.user.uid);
+            userloggeduidHandler(uid)
+            alert("Account created successfully");
         } catch (error) {
-            console.log("Error:", error.message);
+            console.log("User already exists");
             alert(error.message);
         }
     };
