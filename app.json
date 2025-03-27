@@ -13,17 +13,29 @@
       "backgroundColor": "#8B0000"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.munchr",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#8B0000"
       },
-      "package": "com.anonymous.Munchr"
+      "package": "com.anonymous.Munchr",
+      "useNextNotificationsApi": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#8B0000",
+      "androidMode": "default",
+      "androidCollapsedTitle": "Munchr Notification",
+      "iosDisplayInForeground": true
     },
     "extra": {
       "theme": {

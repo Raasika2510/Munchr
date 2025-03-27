@@ -1,13 +1,157 @@
-import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
-import React from 'react';
+import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Image, Alert, TextInput } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
 import theme from '../../theme';
+import { AuthContext } from '../Context/AuthContext';
+import { firebase } from '../Firebase/FirebaseConfig';
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { db } from '../Firebase/FirebaseConfig';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 
-const ProductScreen = () => {
+// Notification Configuration
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+const ProductScreen = ({ navigation, route }) => {
+  const { userloggeduid } = useContext(AuthContext);
+  const [quantity, setQuantity] = useState('1');
+  const [expoPushToken, setExpoPushToken] = useState(null);
+
+  const data = route.params;
+
+  useEffect(() => {
+    // Get permission and token
+    const registerForPushNotifications = async () => {
+      if (Device.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+
+        if (existingStatus !== 'granted') {
+          const { status } = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+        }
+
+        if (finalStatus !== 'granted') {
+          console.log('Failed to get push token for push notification!');
+          return;
+        }
+
+        const token = (await Notifications.getExpoPushTokenAsync()).data;
+        console.log(`Expo Push Token: ${token}`);
+        setExpoPushToken(token);
+      } else {
+        console.log('Must use a physical device for Push Notifications');
+      }
+    };
+
+    registerForPushNotifications();
+  }, []);
+
+  const showAlert = (message) => {
+    Alert.alert('Cart Update', message, [{ text: 'OK' }]);
+  };
+
+  const sendPushNotification = async (message) => {
+    if (!expoPushToken) {
+      console.error('Expo Push Token not available');
+      return;
+    }
+
+    const messageBody = {
+      to: expoPushToken,
+      sound: 'default',
+      title: 'Cart Update',
+      body: message,
+      data: { screen: 'CartScreen' },
+    };
+
+    try {
+      await fetch('https://exp.host/--/api/v2/push/send', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Accept-Encoding': 'gzip, deflate',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(messageBody),
+      });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+  };
+
+  const AddtoCartHandler = async () => {
+    console.log('✅ AddtoCartHandler triggered');
+
+    if (parseInt(quantity, 10) <= 0) {
+      showAlert('Quantity must be greater than 0');
+      sendPushNotification('Quantity must be greater than 0');
+      return;
+    }
+
+    const date = new Date().getTime().toString();
+    const userCartRef = doc(db, 'UserCart', userloggeduid);
+
+    const foodData = {
+      item_id: data.id,
+      FoodQuantity: parseInt(quantity, 10),
+      userid: userloggeduid,
+      cartItemId: date + userloggeduid,
+    };
+
+    try {
+      const docSnap = await getDoc(userCartRef);
+
+      if (docSnap.exists()) {
+        const cartItems = docSnap.data().cartItems || [];
+
+        const existingItemIndex = cartItems.findIndex((item) => item.item_id === data.id);
+
+        if (existingItemIndex !== -1) {
+          cartItems[existingItemIndex].FoodQuantity += parseInt(quantity, 10);
+
+          await updateDoc(userCartRef, { cartItems });
+          showAlert('Quantity updated in cart');
+          sendPushNotification('Quantity updated in cart');
+        } else {
+          await updateDoc(userCartRef, {
+            cartItems: arrayUnion(foodData),
+          });
+          showAlert('Item added to cart');
+          sendPushNotification('Item added to cart');
+        }
+      } else {
+        await setDoc(userCartRef, { cartItems: [foodData] });
+        showAlert('Cart created and item added');
+        sendPushNotification('Cart created and item added');
+      }
+    } catch (error) {
+      console.error('❌ Firestore error:', error);
+      showAlert('Failed to add item to cart');
+      sendPushNotification('Failed to add item to cart');
+    }
+  };
+
+  const IncreaseQuantityHandler = () => {
+    setQuantity((parseInt(quantity) + 1).toString());
+  };
+
+  const DecreaseQuantityHandler = () => {
+    if (parseInt(quantity) > 1) {
+      setQuantity((parseInt(quantity) - 1).toString());
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar backgroundColor={theme.colors.primary} />
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
           <Text style={styles.headerText}>Close</Text>
         </TouchableOpacity>
       </View>
@@ -18,10 +162,9 @@ const ProductScreen = () => {
         </View>
 
         <View style={styles.containerIn2}>
-
           <View style={styles.containerIn2_s1}>
-            <Text style={styles.containerIn2_s1_foodname}>Pizza</Text>
-            <Text style={styles.containerIn2_s1_foodprice}>Rs. 90</Text>
+            <Text style={styles.containerIn2_s1_foodname}>{data.FoodName}</Text>
+            <Text style={styles.containerIn2_s1_foodprice}>Rs. {data.FoodPrice}</Text>
           </View>
 
           <View style={styles.containerIn2_s2}>
@@ -32,27 +175,24 @@ const ProductScreen = () => {
             <Text style={styles.containerIn2_s2_veg}>VEG</Text>
           </View>
 
-    <View style={styles.containerIn2_s1}>
-        <Text style={styles.containerIn2_s1_foodname}>Indian Thali set</Text>
-        <Text style={styles.containerIn2_s1_foodprice}>Rs. 290</Text>
-    </View>
-
-    <View style={styles.containerIn2_s2}>
-        <Text style={styles.containerIn2_s2_head}>About item:</Text>
-        <Text style={styles.containerIn2_s2_description}>Indian Thali – A wholesome platter featuring a delightful mix of flavors! Enjoy a balanced meal with rice, roti, dal, sabzi, curd, pickle, and a sweet treat, all served on a single plate. A true taste of India in every bite! 🍛🥗✨</Text>
-        <Text style={styles.containerIn2_s2_veg}>VEG</Text>
-    </View>
-
-
           <View style={styles.containerIn2_s3}>
             <Text style={styles.containerIn2_s3_restaurantnameheading}>Restaurant Name:</Text>
             <Text style={styles.containerIn2_s3_restaurantname}>Papa John's Pizza</Text>
           </View>
+
+          <View style={styles.containerIn2_s4}>
+            <Text style={styles.containerIn2_s4_heading}>Quantity:</Text>
+            <View style={styles.containerIn2_s4_QuantityCont}>
+              <Text style={styles.containerIn2_s4_QuantityCont_MinusText} onPress={DecreaseQuantityHandler}>-</Text>
+              <TextInput style={styles.containerIn2_s4_QuantityCont_TextInput} value={quantity} />
+              <Text style={styles.containerIn2_s4_QuantityCont_PlusText} onPress={IncreaseQuantityHandler}>+</Text>
+            </View>
+          </View>
         </View>
 
         <View style={styles.containerIn3}>
-          <TouchableOpacity style={styles.containerIn3_buybtn}>
-            <Text style={styles.containerIn3_buybtn_text}>Buy</Text>
+          <TouchableOpacity style={styles.containerIn3_buybtn} onPress={AddtoCartHandler}>
+            <Text style={styles.containerIn3_buybtn_text}>Add to Cart</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -61,6 +201,9 @@ const ProductScreen = () => {
 };
 
 export default ProductScreen;
+
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -172,6 +315,55 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row'
+  },
+  containerIn2_s4:{
+    width: '90%',
+    alignSelf: 'center',
+    alignItems: 'center'
+  },
+  containerIn2_s4_heading:{
+    color: 'grey',
+    fontSize: 18,
+    fontWeight: '600'
+  },
+  containerIn2_s4_QuantityCont:{
+    flexDirection: 'row',
+    alignItems:'center',
+    margin: 10,
+  },
+  containerIn2_s4_QuantityCont_MinusText:{
+    backgroundColor: theme.colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+    elevation: 2,
+    padding: 10,
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  containerIn2_s4_QuantityCont_PlusText:{
+    backgroundColor: theme.colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+    elevation: 2,
+    padding: 10,
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  containerIn2_s4_QuantityCont_TextInput:{
+    backgroundColor: theme.colors.secondaryBackground,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 2,
+    padding: 10,
+    width: 50,
+    borderRadius: 20,
+    marginHorizontal: 10,
+    fontSize: 20,
+    textAlign: 'center'
   },
   containerIn3_buybtn: {
     width: '90%',
