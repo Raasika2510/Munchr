@@ -25,7 +25,6 @@ const ProductScreen = ({ navigation, route }) => {
   const data = route.params;
 
   useEffect(() => {
-    // Get permission and token
     const registerForPushNotifications = async () => {
       if (Device.isDevice) {
         const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -41,7 +40,10 @@ const ProductScreen = ({ navigation, route }) => {
           return;
         }
 
-        const token = (await Notifications.getExpoPushTokenAsync()).data;
+        const projectId = '9aef5ea8-3b08-46af-82e8-24339e38221e';
+        const token = (
+          await Notifications.getExpoPushTokenAsync({ projectId })
+        ).data;
         console.log(`Expo Push Token: ${token}`);
         setExpoPushToken(token);
       } else {

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Munchr",
-    "slug": "Munchr",
+    "slug": "munchr",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -43,7 +43,11 @@
         "secondaryColor": "#B22222",
         "backgroundColor": "#FFF8F2",
         "textColor": "#333"
+      },
+      "eas": {
+        "projectId": "9aef5ea8-3b08-46af-82e8-24339e38221e"
       }
-    }
+    },
+    "owner": "madmaxie"
   }
 }
