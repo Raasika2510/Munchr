@@ -104,6 +104,7 @@ const ProductScreen = ({ navigation, route }) => {
       FoodQuantity: parseInt(quantity, 10),
       userid: userloggeduid,
       cartItemId: date + userloggeduid,
+      totalFoodPrice: parseInt(data.FoodPrice) *  parseInt(quantity),
     };
 
     try {

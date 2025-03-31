@@ -32,11 +32,11 @@ const UserCartScreen = ({ navigation }) => {
             if (docSnap.exists() && docSnap.data().cartItems) {
                 console.log('Cart Data:', docSnap.data());
                 setCartData(docSnap.data());
-                setCartAllData(docSnap.data().cartItems);  // ✅ Ensure cartItems is available
+                setCartAllData(docSnap.data().cartItems);
             } else {
                 console.log("No data found in UserCart");
                 setCartData([]);
-                setCartAllData([]);  // ✅ Ensure cart is empty when no data
+                setCartAllData([]);
             }
         } catch (error) {
             console.error("Error fetching cart data:", error);
@@ -68,13 +68,6 @@ const UserCartScreen = ({ navigation }) => {
         foodDataHandler();
     }, []);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            cardDataHandler();
-            TotalPriceHandler();
-            console.log('Triggered Cart')
-        }, [])
-    );
 
     const DeleteButtonhandler = async (item) => {
         if (!userloggeduid) return;
@@ -124,8 +117,15 @@ const UserCartScreen = ({ navigation }) => {
     }, [cartAlldata, loading]);
 
 
-    console.log("item's data", ItemCost, totalCost)
+    console.log("item's dataa", ItemCost, totalCost, )
     
+    useFocusEffect(
+        React.useCallback(() => {
+            cardDataHandler();
+            TotalPriceHandler();
+            console.log('Triggered Cart')
+        }, [])
+    );
 
     return (
         <View style={styles.mainContainer}>
