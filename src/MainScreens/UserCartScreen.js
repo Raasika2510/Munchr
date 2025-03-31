@@ -18,6 +18,7 @@ const UserCartScreen = ({ navigation }) => {
     const [totalCost, setTotalCost] = useState('0')
     const [deliveryCharges, setDeliveryCharges] = useState('0')
     
+    const [paymentpage, setPaymentPage] = useState(false);
 
     // Fetch Cart Data
    
@@ -127,6 +128,49 @@ const UserCartScreen = ({ navigation }) => {
         }, [])
     );
 
+    if (paymentpage === true) {
+        return (
+            <View style={styles.mainContainer}>
+                <View style={{ backgroundColor: '#FF3F00', paddingVertical: 15, paddingHorizontal: 15, marginTop: 30 }}>
+
+                    <TouchableOpacity>
+                        <Text style={{ fontSize: 16, color: 'white' }}>Close</Text>
+                    </TouchableOpacity>
+
+                </View>
+                <View style={styles.container}>
+
+                    <View>
+                        <Text style={{ fontSize: 18, fontWeight: '600', paddingVertical: 10, paddingHorizontal: 15 }}>Payment Options</Text>
+
+
+                        <TouchableOpacity style={{ backgroundColor: '#FF3F00', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginHorizontal: 10 }} onPress={() => { alert('Selected') }}>
+                            <Text style={{ fontSize: 17, fontWeight: '500', color: 'white' }}>Cash on Delivery</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={{ paddingBottom: 30 }}>
+                        <Text style={{ fontSize: 18, fontWeight: '600', paddingVertical: 10, paddingHorizontal: 15 }}>Delivery Location</Text>
+
+                        <TouchableOpacity style={{ backgroundColor: '#FF3F00', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginHorizontal: 10 }} onPress={() => { alert('Selected') }}>
+                            <Text style={{ fontSize: 17, fontWeight: '500', color: 'white' }}>Current Location</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ backgroundColor: '#FF3F00', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginHorizontal: 10, marginTop: 10 }} onPress={() => { alert('Selected') }}>
+                            <Text style={{ fontSize: 17, fontWeight: '500', color: 'white' }}>Change Location</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={{ paddingTop: 10, borderTopWidth: 1, borderColor: '#c9c9c9' }}>
+
+
+                        <TouchableOpacity style={{ backgroundColor: '#FF3F00', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginHorizontal: 10, marginTop: 10, alignItems: 'center' }} onPress={() => PlaceNow() }>
+                            <Text style={{ fontSize: 17, fontWeight: '500', color: 'white' }}>Place Order</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        )
+    }
     return (
         <View style={styles.mainContainer}>
             <View style={{ backgroundColor: theme.colors.primary, paddingVertical: 15, paddingHorizontal: 15, marginTop: 30 }}>
@@ -170,7 +214,7 @@ const UserCartScreen = ({ navigation }) => {
 
                                                 <View style={styles.containerCard_in3}>
                                                     <TouchableOpacity style={styles.containerCard_in3_btn} onPress={() => { DeleteButtonhandler(item) }} >
-                                                        <Text style={styles.containerCard_in3_btn_txt}>Deletee </Text>
+                                                        <Text style={styles.containerCard_in3_btn_txt}>Delete </Text>
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>
@@ -221,7 +265,7 @@ const UserCartScreen = ({ navigation }) => {
                             <Text style= {{fontSize: 20, fontWeight: '600', paddingLeft: 5}}> ₹ {totalCost} </Text>
                         </View>
                         <TouchableOpacity style={{backgroundColor:'#eb242e', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 20}}>
-                            <Text style={{fontSize: 17, fontWeight: '500', color: 'white'}} onPress={() => GoToPaymentPage()}> Place Order </Text>
+                            <Text style={{fontSize: 17, fontWeight: '500', color: 'white'}} onPress={() => setPaymentPage(true)}> Place Order </Text>
 
                         </TouchableOpacity>
 
