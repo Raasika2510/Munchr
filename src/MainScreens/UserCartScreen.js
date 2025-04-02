@@ -1,379 +1,572 @@
-import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Image, FlatList } from 'react-native';  // ✅ Fixed FlatList import
-import React, { useEffect, useContext, useState } from 'react';
-import theme from '../../theme';
-import { AuthContext } from '../Context/AuthContext';
-import { db } from '../Firebase/FirebaseConfig';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { updateDoc, arrayRemove, deleteField } from 'firebase/firestore';
-import { useFocusEffect } from '@react-navigation/native';
-
-const UserCartScreen = ({ navigation }) => {
-    const { userloggeduid } = useContext(AuthContext);
-    const [cartData, setCartData] = useState([]);
-    const [cartAlldata, setCartAllData] = useState([]);
-    const [foodAlldata, setFoodAllData] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    const [ItemCost, setItemCost] = useState('0')
-    const [totalCost, setTotalCost] = useState('0')
-    const [deliveryCharges, setDeliveryCharges] = useState('0')
-    
-    const [paymentpage, setPaymentPage] = useState(false);
-
-    // Fetch Cart Data
-   
-    const cardDataHandler = async () => {
-        if (!userloggeduid) return;
-        
-        const docRef = doc(db, 'UserCart', userloggeduid);
-    
+  import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Image, FlatList, Alert } from 'react-native';
+  import React, { useEffect, useContext, useState } from 'react';
+  import theme from '../../theme';
+  import { AuthContext } from '../Context/AuthContext';
+  import { db } from '../Firebase/FirebaseConfig';
+  import { doc, getDoc, collection, getDocs, updateDoc, arrayRemove, deleteField, setDoc, serverTimestamp } from 'firebase/firestore';
+  import { useFocusEffect } from '@react-navigation/native';
+  
+  const UserCartScreen = ({ navigation }) => {
+      const { userloggeduid } = useContext(AuthContext);
+      const [cartData, setCartData] = useState({});
+      const [cartAlldata, setCartAllData] = useState([]);
+      const [foodAlldata, setFoodAllData] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [ItemCost, setItemCost] = useState('0');
+      const [totalCost, setTotalCost] = useState('0');
+      const [deliveryCharges, setDeliveryCharges] = useState('0');
+      const [paymentpage, setPaymentPage] = useState(false);
+      const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  
+      // Fetch Cart Data
+      const cardDataHandler = async () => {
+          if (!userloggeduid) return;
+          
+          const docRef = doc(db, 'UserCart', userloggeduid);
+      
+          try {
+              const docSnap = await getDoc(docRef);
+      
+              if (docSnap.exists() && docSnap.data().cartItems) {
+                  setCartData(docSnap.data());
+                  setCartAllData(docSnap.data().cartItems);
+              } else {
+                  setCartData({});
+                  setCartAllData([]);
+              }
+          } catch (error) {
+              console.error("Error fetching cart data:", error);
+              Alert.alert("Error", "Failed to load cart data");
+          } finally {
+              setLoading(false);
+          }
+      };
+  
+      // Fetch Food Data
+      const foodDataHandler = async () => {
+          try {
+              const foodCollectionRef = collection(db, 'FoodData');
+              const querySnapshot = await getDocs(foodCollectionRef);
+  
+              const foodItems = [];
+              querySnapshot.forEach((doc) => {
+                  foodItems.push({ id: doc.id, ...doc.data() });
+              });
+  
+              setFoodAllData(foodItems);
+          } catch (error) {
+              console.error("Error fetching food data:", error);
+              Alert.alert("Error", "Failed to load menu items");
+          }
+      };
+  
+      const DeleteButtonhandler = async (item) => {
+          if (!userloggeduid) return;
+          
+          const docRef = doc(db, 'UserCart', userloggeduid);
+      
+          try {
+              const docSnapshot = await getDoc(docRef);
+              if (docSnapshot.exists()) {
+                  const cartData = docSnapshot.data();
+                  
+                  if (cartData.cartItems && cartData.cartItems.length === 1) {
+                      await updateDoc(docRef, { cartItems: deleteField() });
+                  } else {
+                      await updateDoc(docRef, { cartItems: arrayRemove(item) });
+                  }
+  
+                  await cardDataHandler();
+              }
+          } catch (error) {
+              console.error("Error deleting item:", error);
+              Alert.alert("Error", "Failed to remove item from cart");
+          }
+      };
+  
+      const TotalPriceHandler = () => {
+          if (cartAlldata && cartAlldata.length > 0) {
+              let totalfoodprice = 0;
+              cartAlldata.forEach((item) => {
+                  totalfoodprice += parseInt(item.totalFoodPrice);
+              });
+              setItemCost(totalfoodprice.toString());
+              setTotalCost(totalfoodprice.toString());
+          } else {
+              setItemCost('0');
+              setTotalCost('0');
+          }
+      };
+  
+      const deleteCart = async () => {
+          const docRef = doc(db, 'UserCart', userloggeduid);
+          try {
+              const docSnapshot = await getDoc(docRef);
+              if (docSnapshot.exists()) {
+                  await updateDoc(docRef, { cartItems: deleteField() });
+              }
+          } catch (error) {
+              console.error('Error clearing cart:', error);
+              throw error;
+          }
+      };
+      
+      
+    const PlaceNow = async () => {
         try {
-            const docSnap = await getDoc(docRef);
+            console.log("its gone!")
+            const docid = new Date().getTime().toString() + userloggeduid;
+            const cDate = new Date().getTime().toString();
     
-            if (docSnap.exists() && docSnap.data().cartItems) {
-                console.log('Cart Data:', docSnap.data());
-                setCartData(docSnap.data());
-                setCartAllData(docSnap.data().cartItems);
-            } else {
-                console.log("No data found in UserCart");
-                setCartData([]);
-                setCartAllData([]);
-            }
+            // Prepare the order data documents
+            const orderdatadoc = doc(db, 'UserOrders', docid);
+            const orderitemstabledoc = doc(db, 'OrderItems', docid);
+    
+            // Prepare updated cart data with order metadata
+            const updatedCartData = {
+                ...cartData,
+                cartItems: cartData.cartItems?.map(item => ({
+                    ...item,
+                    orderId: docid,
+                    orderDate: cDate
+                })) || []
+            };
+    
+            // Save to both collections
+            await Promise.all([
+                setDoc(orderitemstabledoc, updatedCartData),
+                setDoc(orderdatadoc, {
+                    orderid: docid,
+                    orderstatus: 'Pending',
+                    ordercost: totalCost,
+                    orderdate: cDate,
+                    userpayment: 'COD',
+                    paymenttotal: '',
+                    userId: userloggeduid
+                })
+            ]);
+    
+            // Clear the cart
+            await deleteCart();
+            
+            // Show success and navigate
+            Alert.alert(
+                "Order Successful",
+                "Your order has been placed successfully!"
+            );
+            
+            // Then navigate after a short delay
+            setTimeout(() => {
+                navigation.navigate('Home');
+            }, 1000);
+    
         } catch (error) {
-            console.error("Error fetching cart data:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Fetch Food Data
-    const foodDataHandler = async () => {
-        try {
-            const foodCollectionRef = collection(db, 'FoodData');
-            const querySnapshot = await getDocs(foodCollectionRef);
-
-            const foodItems = [];
-            querySnapshot.forEach((doc) => {
-                foodItems.push({ id: doc.id, ...doc.data() });
+            console.error("Order placement error:", {
+                code: error.code,
+                message: error.message,
+                stack: error.stack
             });
-
-            console.log('Food Data:', foodItems);
-            setFoodAllData(foodItems);
-        } catch (error) {
-            console.error("Error fetching food data:", error);
-        }
-    };
-
-    useEffect(() => {
-        cardDataHandler();
-        foodDataHandler();
-    }, []);
-
-
-    const DeleteButtonhandler = async (item) => {
-        if (!userloggeduid) return;
-        
-        console.log("item no 1")
-        const docRef = doc(db, 'UserCart', userloggeduid);
-    
-        try {
-            const docSnapshot = await getDoc(docRef);
-            if (docSnapshot.exists()) {
-                const cartData = docSnapshot.data();
-                
-                if (cartData.cartItems && cartData.cartItems.length === 1) {
-                    await updateDoc(docRef, { cartItems: deleteField() });
-                    console.log("item no 2")
-                } else {
-                    await updateDoc(docRef, { cartItems: arrayRemove(item) });
-                    console.log("item no 3")
-                }
-
-                cardDataHandler();
-            }
-        } catch (error) {
-            console.error("Error deleting item:", error);
+            Alert.alert(
+                "Order Failed",
+                error.code === 'permission-denied' 
+                    ? "You don't have permission to place orders."
+                    : "Failed to place order. Please try again."
+            );
         }
     };
 
 
+      useEffect(() => {
+          cardDataHandler();
+          foodDataHandler();
+      }, []);
+  
+      useEffect(() => {
+          if (!loading) {
+              TotalPriceHandler();
+          }
+      }, [cartAlldata, loading]);
+  
+      useFocusEffect(
+          React.useCallback(() => {
+              cardDataHandler();
+          }, [])
+      );
+  
+      if (paymentpage) {
+          return (
+              <View style={styles.mainContainer}>
+                  <View style={styles.paymentHeader}>
+                      <TouchableOpacity onPress={() => setPaymentPage(false)}>
+                          <Text style={styles.closeText}>Close</Text>
+                      </TouchableOpacity>
+                  </View>
+                  
+                  <View style={styles.paymentContainer}>
+                      <View>
+                          <Text style={styles.sectionTitle}>Payment Options</Text>
+                          <TouchableOpacity style={styles.paymentOptionButton}>
+                              <Text style={styles.paymentOptionText}>Cash on Delivery</Text>
+                          </TouchableOpacity>
+                      </View>
+  
+                      <View style={styles.deliverySection}>
+                          <Text style={styles.sectionTitle}>Delivery Location</Text>
+                          <TouchableOpacity style={styles.locationButton}>
+                              <Text style={styles.locationButtonText}>Current Location</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={[styles.locationButton, styles.changeLocationButton]}>
+                              <Text style={styles.locationButtonText}>Change Location</Text>
+                          </TouchableOpacity>
+                      </View>
+  
+                      <View style={styles.placeOrderSection}>
+                          <TouchableOpacity 
+                              style={styles.placeOrderButton}
+                              onPress={PlaceNow}
+                              disabled={isPlacingOrder}
+                          >
+                              <Text style={styles.placeOrderButtonText}>
+                                  {isPlacingOrder ? 'Processing...' : 'Place Order'}
+                              </Text>
+                          </TouchableOpacity>
+                      </View>
+                  </View>
+              </View>
+          );
+      }
+  
+      return (
+          <View style={styles.mainContainer}>
+              <View style={styles.header}>
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
+                      <Text style={styles.closeText}>Close</Text>
+                  </TouchableOpacity>
+              </View>
+  
+              <View style={styles.container}>
+                  <Text style={styles.containerHead}>My Cart</Text>
+  
+                  <View style={styles.cartout}>
+                      {loading ? (
+                          <Text>Loading...</Text>
+                      ) : cartAlldata.length === 0 ? (
+                          <Text style={styles.emptyCartText}>Your cart is empty!</Text>
+                      ) : (
+                          <FlatList
+                              data={cartAlldata}
+                              keyExtractor={(item, index) => index.toString()}
+                              renderItem={({ item }) => {
+                                  const foodItem = foodAlldata.find(food => food.id === item.item_id);
+                                  
+                                  return foodItem ? (
+                                      <View style={styles.containerCardList}>
+                                          <View style={styles.containerCard}>
+                                              {/* <Image 
+                                                  source={foodItem.image ? { uri: foodItem.image } : require('../Images/default-food.jpg')} 
+                                                  style={styles.cardimage} 
+                                              /> */}
+                                              <Image source={require('../Images/spaghetti.jpg')} style={styles.cardimage} />
 
-    const TotalPriceHandler = () => {
-        if (cartAlldata && cartAlldata.length > 0) {
-            let totalfoodprice = 0;
-            cartAlldata.forEach((item) => {
-                totalfoodprice += parseInt(item.totalFoodPrice);
-            });
-            console.log("Total food price calculated:", totalfoodprice);
-            setItemCost(totalfoodprice.toString());
-            setTotalCost(totalfoodprice.toString());
-        }
-    };
-
-    useEffect(() => {
-        console.log("cartAlldata updated:", cartAlldata);
-        if (!loading) {
-            TotalPriceHandler();
-        }
-    }, [cartAlldata, loading]);
-
-
-    console.log("item's dataa", ItemCost, totalCost, )
-    
-    useFocusEffect(
-        React.useCallback(() => {
-            cardDataHandler();
-            TotalPriceHandler();
-            console.log('Triggered Cart')
-        }, [])
-    );
-
-    if (paymentpage === true) {
-        return (
-            <View style={styles.mainContainer}>
-                <View style={{ backgroundColor: '#FF3F00', paddingVertical: 15, paddingHorizontal: 15, marginTop: 30 }}>
-
-                    <TouchableOpacity>
-                        <Text style={{ fontSize: 16, color: 'white' }}>Close</Text>
-                    </TouchableOpacity>
-
-                </View>
-                <View style={styles.container}>
-
-                    <View>
-                        <Text style={{ fontSize: 18, fontWeight: '600', paddingVertical: 10, paddingHorizontal: 15 }}>Payment Options</Text>
-
-
-                        <TouchableOpacity style={{ backgroundColor: '#FF3F00', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginHorizontal: 10 }} onPress={() => { alert('Selected') }}>
-                            <Text style={{ fontSize: 17, fontWeight: '500', color: 'white' }}>Cash on Delivery</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={{ paddingBottom: 30 }}>
-                        <Text style={{ fontSize: 18, fontWeight: '600', paddingVertical: 10, paddingHorizontal: 15 }}>Delivery Location</Text>
-
-                        <TouchableOpacity style={{ backgroundColor: '#FF3F00', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginHorizontal: 10 }} onPress={() => { alert('Selected') }}>
-                            <Text style={{ fontSize: 17, fontWeight: '500', color: 'white' }}>Current Location</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ backgroundColor: '#FF3F00', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginHorizontal: 10, marginTop: 10 }} onPress={() => { alert('Selected') }}>
-                            <Text style={{ fontSize: 17, fontWeight: '500', color: 'white' }}>Change Location</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={{ paddingTop: 10, borderTopWidth: 1, borderColor: '#c9c9c9' }}>
-
-
-                        <TouchableOpacity style={{ backgroundColor: '#FF3F00', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginHorizontal: 10, marginTop: 10, alignItems: 'center' }} onPress={() => PlaceNow() }>
-                            <Text style={{ fontSize: 17, fontWeight: '500', color: 'white' }}>Place Order</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-        )
-    }
-    return (
-        <View style={styles.mainContainer}>
-            <View style={{ backgroundColor: theme.colors.primary, paddingVertical: 15, paddingHorizontal: 15, marginTop: 30 }}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Text style={{ fontSize: 16, color: theme.colors.buttonText }}>Close</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.container}>
-                <Text style={styles.containerHead}>My Cart</Text>
-
-                <View style={styles.cartout}>
-                    {loading ? (
-                        <Text>Loading...</Text>
-                    ) : cartAlldata.length === 0 ? (
-                        <Text style={{ marginHorizontal: 16, fontSize: 17, color: 'grey' }}>Your cart is empty!</Text>
-                    ) : (
-                        <FlatList
-                            style={styles.FlatListCont}
-                            data={cartAlldata}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item }) => {
-                                const nData = foodAlldata.find(food => food.id === item.item_id);
-                                console.log('Cart item:', item);
-
-                                return nData ? (
-                                    <View style={styles.containerCardList}>
-                                        <View style={styles.containerCard}>
-                                            <Image source={require('../Images/spaghetti.jpg')} style={styles.cardimage} />
-                                            
-                                            <View style={styles.containerCard_in}>
-                                                <View style={styles.containerCard_in1}>
-                                                    <Text style={styles.text}>{nData.restaurant || 'Unknown Restaurant'}</Text>
-                                                </View>
-
-                                                <View style={styles.containerCard_in2}>
-                                                    <Text style={styles.containerCard_in2_itemName}>{nData.FoodName || 'Item'}</Text>
-                                                    <Text style={styles.containerCard_in2_itemPrice}>Rs.{nData.FoodPrice || 'N/A'} each</Text>
-                                                    <Text style={styles.containerCard_in2_itemQty}>Qty: {item.FoodQuantity}</Text>
-                                                </View>
-
-                                                <View style={styles.containerCard_in3}>
-                                                    <TouchableOpacity style={styles.containerCard_in3_btn} onPress={() => { DeleteButtonhandler(item) }} >
-                                                        <Text style={styles.containerCard_in3_btn_txt}>Delete </Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    </View>
-                                ) : null;
-                            }}
-                        />
-                    )}
-                </View>
-                
-                {totalCost && totalCost !== '0' ?
-                    <>
-                    <View style = {{ marginTop: 10}}>
-                        <View style={{
-                            backgroundColor: 'white',
-                            borderColor: 'grey',
-                            borderRadius: 15,
-                            width: '95%',
-                            alignSelf: 'center',
-                            marginVertical: 5,
-                            paddingVertical: 5,
-                            elevation:3                        
-                        }}>
-                        
-                        <View style= {{flexDirection: 'row', justifyContent: 'space-between', width: '95%', alignSelf: 'center'}} >
-                            <Text style= {{ fontWeight: '600'}}> Item Cost</Text>
-                            <Text style= {{ fontWeight: '600'}}> ₹ {ItemCost} </Text>
-                        </View>
-
-                        <View style= {{flexDirection: 'row', justifyContent: 'space-between', width: '95%', alignSelf: 'center'}} >
-                            <Text style= {{ fontWeight: '600'}}> Delivery Charges</Text>
-                            <Text style= {{ fontWeight: '600'}}> ₹ {deliveryCharges} </Text>
-                        </View>
-
-                        <View style= {{flexDirection: 'row', justifyContent: 'space-between', width: '95%', alignSelf: 'center'}} >
-                            <Text style= {{ fontWeight: '600'}}> Service Charges </Text>
-                            <Text> ₹ 0 </Text>
-                        </View>
-
-                        </View>
-                    
-                    </View>
-
-                    <View style= {styles.btnCont}>
-                        <View style= {{flexDirection: 'row'}}>
-                            <Text style= {{fontSize: 20, fontWeight: '600'}}> Total: </Text>
-                            <Text style= {{fontSize: 20, fontWeight: '600', paddingLeft: 5}}> ₹ {totalCost} </Text>
-                        </View>
-                        <TouchableOpacity style={{backgroundColor:'#eb242e', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 20}}>
-                            <Text style={{fontSize: 17, fontWeight: '500', color: 'white'}} onPress={() => setPaymentPage(true)}> Place Order </Text>
-
-                        </TouchableOpacity>
-
-                    </View>
-                    </>
-                    :
-                    null
-                }
-                
-            </View>
-        </View>
-    );
-};
-
-
-const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        width: '100%',
-        backgroundColor: theme.colors.background
-    },
-    containerHead: {
-        fontSize: 25,
-        fontWeight: '600',
-        marginVertical: 5,
-        marginLeft: 5,
-        paddingHorizontal: 10,
-        color: theme.colors.text,
-        fontFamily: theme.fonts.bold
-    },
-    containerCard: {
-        flexDirection: 'row',
-        backgroundColor: theme.colors.cardBackground,
-        marginVertical: 5,
-        borderRadius: 25,
-        width: '95%',
-        alignSelf: 'center',
-        elevation: 2,
-        alignItems: 'center',
-    },
-    cardimage: {
-        width: 100,
-        height: 100,
-        borderBottomLeftRadius: 25,
-        borderTopLeftRadius: 25
-    },
-    containerCard_in: {
-        flexDirection: 'column',
-        margin: 5,
-        width: '69%',
-        alignItems: 'flex-end',
-    },
-    containerCard_in1: {
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        width: '100%',
-        borderRadius: 10,
-        paddingHorizontal: 3,
-        paddingVertical: 2,
-        borderBottomWidth: 1,
-    },
-    containerCard_in2: {
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        width: '100%',
-        borderRadius: 10,
-        paddingHorizontal: 3,
-        paddingVertical: 2,
-    },
-    containerCard_in3: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        width: 100,
-        borderRadius: 20,
-        backgroundColor: theme.colors.background,
-        marginVertical: 5,
-        padding: 5,
-        elevation: 2
-    },
-    containerCard_in2_itemName: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: theme.colors.text,
-        fontFamily: theme.fonts.semiBold
-    },
-    containerCard_in2_itemPrice: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: theme.colors.text,
-        fontFamily: theme.fonts.regular
-    },
-    containerCard_in3_btn_txt: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: theme.colors.primary,
-        fontFamily: theme.fonts.bold
-    },
-    btnCont :{
-        width: '100%',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 0,
-        flexDirection: 'row',
-        marginBottom: 80,
-        paddingHorizontal: 10,
-        paddingTop: 10
-    }
-});
-
-
-export default UserCartScreen;
+                                              
+                                              <View style={styles.containerCard_in}>
+                                                  <View style={styles.containerCard_in1}>
+                                                      <Text style={styles.restaurantText}>
+                                                          {foodItem.restaurant || 'Unknown Restaurant'}
+                                                      </Text>
+                                                  </View>
+  
+                                                  <View style={styles.containerCard_in2}>
+                                                      <Text style={styles.foodNameText}>{foodItem.FoodName}</Text>
+                                                      <Text style={styles.foodPriceText}>Rs.{foodItem.FoodPrice} each</Text>
+                                                      <Text style={styles.foodQuantityText}>Qty: {item.FoodQuantity}</Text>
+                                                  </View>
+  
+                                                  <View style={styles.containerCard_in3}>
+                                                      <TouchableOpacity 
+                                                          style={styles.deleteButton}
+                                                          onPress={() => DeleteButtonhandler(item)}
+                                                      >
+                                                          <Text style={styles.deleteButtonText}>Delete</Text>
+                                                      </TouchableOpacity>
+                                                  </View>
+                                              </View>
+                                          </View>
+                                      </View>
+                                  ) : null;
+                              }}
+                          />
+                      )}
+                  </View>
+                  
+                  {totalCost !== '0' && (
+                      <>
+                          <View style={styles.summaryContainer}>
+                              <View style={styles.summaryCard}>
+                                  <View style={styles.summaryRow}>
+                                      <Text style={styles.summaryLabel}>Item Cost</Text>
+                                      <Text style={styles.summaryValue}>₹ {ItemCost}</Text>
+                                  </View>
+  
+                                  <View style={styles.summaryRow}>
+                                      <Text style={styles.summaryLabel}>Delivery Charges</Text>
+                                      <Text style={styles.summaryValue}>₹ {deliveryCharges}</Text>
+                                  </View>
+  
+                                  <View style={styles.summaryRow}>
+                                      <Text style={styles.summaryLabel}>Service Charges</Text>
+                                      <Text style={styles.summaryValue}>₹ 0</Text>
+                                  </View>
+                              </View>
+                          </View>
+  
+                          <View style={styles.checkoutContainer}>
+                              <View style={styles.totalContainer}>
+                                  <Text style={styles.totalText}>Total:</Text>
+                                  <Text style={styles.totalAmount}>₹ {totalCost}</Text>
+                              </View>
+                              <TouchableOpacity 
+                                  style={styles.placeOrderButtonMain}
+                                  onPress={() => setPaymentPage(true)}
+                                  disabled={cartAlldata.length === 0}
+                              >
+                                  <Text style={styles.placeOrderButtonMainText}>
+                                      {cartAlldata.length === 0 ? 'Cart Empty' : 'Place Order'}
+                                  </Text>
+                              </TouchableOpacity>
+                          </View>
+                      </>
+                  )}
+              </View>
+          </View>
+      );
+  };
+  
+  const styles = StyleSheet.create({
+      mainContainer: {
+          flex: 1,
+          backgroundColor: theme.colors.background,
+      },
+      header: {
+          backgroundColor: theme.colors.primary,
+          paddingVertical: 15,
+          paddingHorizontal: 15,
+          marginTop: 30,
+      },
+      paymentHeader: {
+          backgroundColor: '#FF3F00',
+          paddingVertical: 15,
+          paddingHorizontal: 15,
+          marginTop: 30,
+      },
+      closeText: {
+          fontSize: 16,
+          color: theme.colors.buttonText,
+      },
+      container: {
+          flex: 1,
+          paddingBottom: 20,
+      },
+      containerHead: {
+          fontSize: 25,
+          fontWeight: '600',
+          marginVertical: 15,
+          marginLeft: 15,
+          color: theme.colors.text,
+          fontFamily: theme.fonts.bold,
+      },
+      emptyCartText: {
+          marginHorizontal: 16,
+          fontSize: 17,
+          color: 'grey',
+          textAlign: 'center',
+          marginTop: 20,
+      },
+      containerCardList: {
+          marginBottom: 10,
+      },
+      containerCard: {
+          flexDirection: 'row',
+          backgroundColor: theme.colors.cardBackground,
+          marginVertical: 5,
+          borderRadius: 15,
+          width: '95%',
+          alignSelf: 'center',
+          elevation: 2,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+      },
+      cardimage: {
+          width: 100,
+          height: 100,
+          borderTopLeftRadius: 15,
+          borderBottomLeftRadius: 15,
+      },
+      containerCard_in: {
+          flex: 1,
+          padding: 10,
+      },
+      containerCard_in1: {
+          borderBottomWidth: 1,
+          borderBottomColor: '#e0e0e0',
+          paddingBottom: 5,
+          marginBottom: 5,
+      },
+      restaurantText: {
+          fontSize: 14,
+          color: '#666',
+          fontFamily: theme.fonts.medium,
+      },
+      containerCard_in2: {
+          marginBottom: 5,
+      },
+      foodNameText: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: theme.colors.text,
+          fontFamily: theme.fonts.semiBold,
+      },
+      foodPriceText: {
+          fontSize: 14,
+          color: theme.colors.text,
+          fontFamily: theme.fonts.regular,
+      },
+      foodQuantityText: {
+          fontSize: 14,
+          color: '#666',
+      },
+      deleteButton: {
+          backgroundColor: theme.colors.background,
+          paddingHorizontal: 15,
+          paddingVertical: 5,
+          borderRadius: 15,
+          alignSelf: 'flex-end',
+          borderWidth: 1,
+          borderColor: theme.colors.primary,
+      },
+      deleteButtonText: {
+          color: theme.colors.primary,
+          fontFamily: theme.fonts.medium,
+      },
+      summaryContainer: {
+          marginTop: 15,
+          paddingHorizontal: 15,
+      },
+      summaryCard: {
+          backgroundColor: 'white',
+          borderRadius: 15,
+          padding: 15,
+          elevation: 3,
+      },
+      summaryRow: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginBottom: 8,
+      },
+      summaryLabel: {
+          fontSize: 15,
+          fontFamily: theme.fonts.medium,
+      },
+      summaryValue: {
+          fontSize: 15,
+          fontFamily: theme.fonts.semiBold,
+      },
+      checkoutContainer: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 15,
+          paddingTop: 15,
+          marginBottom: 20,
+      },
+      totalContainer: {
+          flexDirection: 'row',
+          alignItems: 'center',
+      },
+      totalText: {
+          fontSize: 18,
+          fontFamily: theme.fonts.semiBold,
+      },
+      totalAmount: {
+          fontSize: 18,
+          fontFamily: theme.fonts.bold,
+          marginLeft: 5,
+      },
+      placeOrderButtonMain: {
+          backgroundColor: '#eb242e',
+          paddingVertical: 12,
+          paddingHorizontal: 25,
+          borderRadius: 20,
+      },
+      placeOrderButtonMainText: {
+          color: 'white',
+          fontSize: 16,
+          fontFamily: theme.fonts.semiBold,
+      },
+      paymentContainer: {
+          flex: 1,
+          padding: 15,
+      },
+      sectionTitle: {
+          fontSize: 18,
+          fontWeight: '600',
+          marginVertical: 10,
+          marginLeft: 5,
+      },
+      paymentOptionButton: {
+          backgroundColor: '#FF3F00',
+          paddingHorizontal: 20,
+          paddingVertical: 12,
+          borderRadius: 20,
+          marginHorizontal: 10,
+      },
+      paymentOptionText: {
+          fontSize: 16,
+          fontWeight: '500',
+          color: 'white',
+          textAlign: 'center',
+      },
+      deliverySection: {
+          marginTop: 20,
+          paddingBottom: 30,
+      },
+      locationButton: {
+          backgroundColor: '#FF3F00',
+          paddingHorizontal: 20,
+          paddingVertical: 12,
+          borderRadius: 20,
+          marginHorizontal: 10,
+          marginTop: 10,
+      },
+      changeLocationButton: {
+          backgroundColor: '#FF3F00',
+      },
+      locationButtonText: {
+          fontSize: 16,
+          fontWeight: '500',
+          color: 'white',
+          textAlign: 'center',
+      },
+      placeOrderSection: {
+          borderTopWidth: 1,
+          borderColor: '#e0e0e0',
+          paddingTop: 20,
+      },
+      placeOrderButton: {
+          backgroundColor: '#FF3F00',
+          paddingHorizontal: 20,
+          paddingVertical: 12,
+          borderRadius: 20,
+          marginHorizontal: 10,
+          alignItems: 'center',
+      },
+      placeOrderButtonText: {
+          fontSize: 16,
+          fontWeight: '500',
+          color: 'white',
+      },
+  });
+  
+  export default UserCartScreen;
