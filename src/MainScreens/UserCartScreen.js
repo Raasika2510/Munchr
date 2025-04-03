@@ -3,7 +3,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import theme from '../../theme';
 import { AuthContext } from '../Context/AuthContext';
 import { db } from '../Firebase/FirebaseConfig';
-import { doc, getDoc, collection, getDocs, updateDoc, arrayRemove, deleteField, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, updateDoc, arrayRemove, deleteField, setDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 
 const UserCartScreen = ({ navigation }) => {
@@ -111,64 +111,74 @@ const UserCartScreen = ({ navigation }) => {
         }
     };
     
+    const recreateOrderItems = async (orderId, orderItems) => {
+        try {
+            const orderItemsRef = doc(db, "OrderItems", orderId);
+            await setDoc(orderItemsRef, {
+                items: orderItems,
+                recreatedAt: new Date().toISOString(),
+            });
+            console.log("✅ OrderItems document recreated successfully.");
+        } catch (error) {
+            console.error("❌ Error recreating OrderItems:", error);
+        }
+    };
 
     const PlaceNow = async () => {
         try {
-            console.log("Placing order...");
+            console.log("🛒 Placing order...");
+    
             if (!userloggeduid) {
                 Alert.alert("Error", "User not logged in. Please log in again.");
                 return;
             }
-            const docid = new Date().getTime().toString() + userloggeduid;
-            const cDate = new Date().getTime().toString();
-            const orderdatadoc = doc(db, 'UserOrders', docid);
-            const orderitemstabledoc = doc(db, 'OrderItems', docid);
+    
+            const docid = `${Date.now()}_${userloggeduid}`;
+            const cDate = new Date().toISOString();
+    
+            const orderDocRef = doc(db, "UserOrders", docid);
+            const orderItemsDocRef = doc(db, "OrderItems", docid);
+    
             const updatedCartData = {
-                ...cartData,
-                cartItems: cartData.cartItems?.map(item => ({
+                items: cartData.cartItems?.map(item => ({
                     ...item,
                     orderId: docid,
-                    orderDate: cDate
-                })) || []
+                    orderDate: cDate,
+                })) || [],
+                createdAt: cDate,
             };
-            const orderItemsSnapshot = await getDoc(orderitemstabledoc);
+            const orderItemsSnapshot = await getDoc(orderItemsDocRef);
     
             if (orderItemsSnapshot.exists()) {
-                // If document exists, update it
-                await updateDoc(orderitemstabledoc, updatedCartData);
-                await setDoc(orderitemstabledoc, updatedCartData);
+                // If it exists, update it
+                await updateDoc(orderItemsDocRef, updatedCartData);
+            } else {
+                // If it doesn't exist, create it
+                await setDoc(orderItemsDocRef, updatedCartData);
             }
-            await setDoc(orderdatadoc, {
+            await setDoc(orderDocRef, {
                 orderid: docid,
-                orderstatus: 'Pending',
+                orderstatus: "Pending",
                 ordercost: totalCost,
                 orderdate: cDate,
-                userpayment: 'COD',
-                paymenttotal: '',
-                userId: userloggeduid
+                userpayment: "COD",
+                paymenttotal: "",
+                userId: userloggeduid,
             }, { merge: true });
+
             await deleteCart();
-            console.log("Your order has been placed successfully")
+    
+            console.log("Order placed successfully!");
             Alert.alert("Order Successful", "Your order has been placed successfully!");
+    
             setTimeout(() => {
-                navigation.navigate('Home');
+                navigation.navigate("Home");
             }, 1000);
-    
         } catch (error) {
-            console.error("Order placement error:", {
-                code: error.code,
-                message: error.message,
-                stack: error.stack
-            });
-    
-            Alert.alert("Order Failed", 
-                error.code === 'permission-denied' 
-                    ? "You don't have permission to place orders."
-                    : "Failed to place order. Please try again."
-            );
+            console.error("Order placement error:", error);
+            Alert.alert("Order Failed", "Failed to place order. Please try again.");
         }
     };
-    
 
 
     useEffect(() => {

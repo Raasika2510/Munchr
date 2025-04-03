@@ -48,7 +48,7 @@ const TrackOrderItems = ({ foodDataAll, data, navigation }) => {
         const unsubscribe = onSnapshot(orderDocRef, (docSnapshot) => {
             if (docSnapshot.exists()) {
                 console.log("Fetched Order Items:", docSnapshot.data());
-                setOrderData(docSnapshot.data().cartItems || []);
+                setOrderData(docSnapshot.data().items || []);
             } else {
                 console.log("No Order Items Found");
                 setOrderData([]);
