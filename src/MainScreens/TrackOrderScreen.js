@@ -1,8 +1,110 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, FlatList } from 'react-native'
 import React from 'react'
 import theme from '../../theme';
+  import { AuthContext } from '../Context/AuthContext';
+import {firebase} from '../Firebase/FirebaseConfig'
+import {useState, useEffect, useContext} from 'react';
+import { db } from '../Firebase/FirebaseConfig';
+import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
+import TrackOrderItems from '../Components/TrackOrderItems'
 
-const TrackOrderScreen = () => {
+const TrackOrderScreen = ({navigation}) => {
+  const { userloggeduid } = useContext(AuthContext);
+  
+  const [orders, setOrders] = useState([]);
+  const [foodData, setFoodData] = useState([]);
+  const [foodDataAll, setFoodDataAll] = useState([]);
+
+  useEffect(() => {
+    console.log("User UUID:", userloggeduid);
+  }, [userloggeduid]);
+
+  // ✅ Fetch User Orders
+  const getOrders = async () => {
+    if (!userloggeduid) {
+      console.log("No user UUID found.");
+      return;
+    }
+
+    try {
+      console.log("Fetching orders for:", userloggeduid);
+      
+      const ordersRef = collection(db, "UserOrders");
+      const q = query(ordersRef, where("userId", "==", userloggeduid));
+
+      const querySnapshot = await getDocs(q);
+      const ordersList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      console.log("Fetched Orders:", ordersList);
+      setOrders(ordersList);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  // ✅ Fetch Order Items
+  const getOrdersItems = async () => {
+    if (!userloggeduid) {
+      console.log("No user UUID found.");
+      return;
+    }
+
+    try {
+      console.log("Fetching orders for:", userloggeduid);
+      
+      const ordersRef = collection(db, "OrderItems");
+      const q = query(ordersRef, where("userId", "==", userloggeduid));
+
+      const querySnapshot = await getDocs(q);
+      const ordersList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      console.log("Fetched Orders:", ordersList);
+      setFoodData(ordersList);
+    } catch (error) {
+      console.error("Error fetching order items:", error);
+    }
+  };
+
+  // ✅ Fetch All Food Data
+  const getFoodDataAll = async () => {
+    try {
+      console.log("Fetching all food data...");
+      
+      const foodRef = collection(db, "FoodData"); // No userId filter
+  
+      const querySnapshot = await getDocs(foodRef);
+      const foodList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+  
+      console.log("Fetched Food Data:", foodList);
+      setFoodDataAll(foodList);
+    } catch (error) {
+      console.error("Error fetching food data:", error);
+    }
+  };
+  
+
+  useEffect(() => {
+    getOrders();
+  }, [userloggeduid]);
+
+  useEffect(() => {
+    getOrdersItems();
+    getFoodDataAll();
+  }, []);
+
+  console.log("User Orders", orders);
+  console.log("Order Items", foodData);
+  console.log("Food Data", foodDataAll);
+
   return (
     <View style={styles.container}>
       {/* Header Section */}
@@ -12,48 +114,18 @@ const TrackOrderScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView>
-        <Text style={styles.mainHeading}>My Orders</Text>
-        
-        {/* Order Container */}
-        <View style={styles.mainContainer}>
-          <Text style={styles.orderId}>Order id : 4455545ad</Text>
-          <Text style={styles.orderTime}>Time : 4:10 AM</Text>
-
-          {/* Order Item 1 */}
-          <View style={styles.orderItemContainer}>
-            <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
-            <View style={styles.orderItemContainer_2}>
-              <Text style={styles.orderItemName}>Indian Thali</Text>
-              <Text style={styles.orderPrice}>$ 290</Text>
-              <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
-            </View>
-          </View>
-
-          {/* Order Item 2 */}
-          <View style={styles.orderItemContainer}>
-            <Image source={require('../Images/pizza1.jpg')} style={styles.cardimage} />
-            <View style={styles.orderItemContainer_2}>
-              <Text style={styles.orderItemName}>Pizza</Text>
-              <Text style={styles.orderPrice}>$ 150</Text>
-              <Text style={styles.orderQuantity}>Qty: 1 unit</Text>
-            </View>
-          </View>
-
-          {/* Order Item 3 */}
-          <View style={styles.orderItemContainer}>
-            <Image source={require('../Images/mojito.jpg')} style={styles.cardimage} />
-            <View style={styles.orderItemContainer_2}>
-              <Text style={styles.orderItemName}>Virgin Mojito</Text>
-              <Text style={styles.orderPrice}>$ 50</Text>
-              <Text style={styles.orderQuantity}>Qty: 2 units</Text>
-            </View>
-          </View>
-
-          {/* Order Total */}
-          <Text style={styles.orderTotal}>Total: $490</Text>
-        </View>
-      </ScrollView>
+      <FlatList
+  data={orders}
+  keyExtractor={(order, index) => index.toString()} // Ensure keys are unique
+  renderItem={({ item: order }) => (
+    <View style={styles.mainContainer}>
+      <Text style={styles.orderId}>Order id : {(order.orderid).substring(0,15)}</Text>
+      <Text style={styles.orderTime}>Time : 4:10 AM </Text>
+      <TrackOrderItems foodDataAll={foodDataAll} data={order.orderid} navigation={navigation} />
+      <Text style={styles.orderTotal}>Total: Rs.{order.ordercost}</Text>
+    </View>
+  )}
+/>
     </View>
   );
 };
