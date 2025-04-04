@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import Entypo from '@expo/vector-icons/Entypo';
 
-const Headerbar = () => {
+const Headerbar = ({navigation, locationName}) => {
   return (
             <View style={styles.container}>
               <TouchableOpacity style={{flexDirection: 'row'}}>
@@ -11,7 +11,13 @@ const Headerbar = () => {
                 <View>
                 <Text style={{paddingRight: 3, fontSize: 16, fontWeight: '700'}}>Location</Text>
                 </View>
-                <Text>Chennai</Text>
+                
+                {
+                  locationName ? <Text>{locationName}</Text>
+                  : 
+                  <Text>Chennai</Text>
+
+                }
               </View>
               
               </TouchableOpacity>
