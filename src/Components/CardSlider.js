@@ -32,10 +32,7 @@ const CardSlider = ({ navigation, data }) => {
               onPress={() => openProductHandler(item)}
             >
               <View>
-                <Image
-                  source={require("../Images/indian.jpg")}
-                  style={styles.cardimage}
-                />
+              <Image source={{ uri: item.image }} style={styles.cardimage} />
               </View>
               <View style={styles.cardin1}>
                 <Text style={styles.cardin1txt}>{item.FoodName}</Text>
@@ -49,7 +46,7 @@ const CardSlider = ({ navigation, data }) => {
                     </Text>
                     <Text> {item.FoodPrice}Rs</Text>
                   </Text>
-                  <Text style={styles.cardin2txt3}>VEG</Text>
+                  <Text style={styles.cardin2txt3}>{item.FoodType}</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -120,7 +117,7 @@ const styles = StyleSheet.create({
   cardin2txt3: {
     height: 20,
     borderRadius: 10,
-    backgroundColor: "green",
+    backgroundColor: "red",
     fontSize: 10,
     fontWeight: "500",
     color: "white",

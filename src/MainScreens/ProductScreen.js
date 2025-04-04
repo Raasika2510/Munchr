@@ -161,7 +161,7 @@ const ProductScreen = ({ navigation, route }) => {
 
       <View style={styles.containerIn}>
         <View style={styles.containerIn1}>
-          <Image source={require('../Images/indian.jpg')} style={styles.cardimage} />
+          <Image source={{ uri: data.image }} style={styles.cardimage} />
         </View>
 
         <View style={styles.containerIn2}>
@@ -173,14 +173,14 @@ const ProductScreen = ({ navigation, route }) => {
           <View style={styles.containerIn2_s2}>
             <Text style={styles.containerIn2_s2_head}>About item:</Text>
             <Text style={styles.containerIn2_s2_description}>
-              Mozzarella cheese pizza is a classic favorite known for its gooey, stretchy cheese and rich, savory flavor.
+              {data.Description}
             </Text>
-            <Text style={styles.containerIn2_s2_veg}>VEG</Text>
+            <Text style={styles.cardin2txt3}>{data.FoodType}</Text>
           </View>
 
           <View style={styles.containerIn2_s3}>
             <Text style={styles.containerIn2_s3_restaurantnameheading}>Restaurant Name:</Text>
-            <Text style={styles.containerIn2_s3_restaurantname}>Papa John's Pizza</Text>
+            <Text style={styles.containerIn2_s3_restaurantname}>{data.Restaurant}</Text>
           </View>
 
           <View style={styles.containerIn2_s4}>
