@@ -3,7 +3,7 @@ import React from 'react'
 const Categories = () => {
   return (
     <View style ={styles.container}>
-      <Text style={styles.head}>Catergories</Text>
+      <Text style={styles.head}>Categories</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <TouchableOpacity style={[styles.box, {backgroundColor:'#f5e5ff'}]}>
             <Image source={require('../Images/icon_1.jpg')} style={styles.image}/>
@@ -41,7 +41,11 @@ const styles = StyleSheet.create({
         fontWeight:'600',
         margin:10,
         paddingBottom:5,
-        paddingLeft:5
+        paddingLeft:5,
+        color: "black",
+        borderLeftWidth: 4,
+        backgroundColor:"white",
+        borderLeftColor: "#FFD700"
     },
     image:{
         width: 30,

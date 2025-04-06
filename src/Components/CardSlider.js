@@ -18,7 +18,7 @@ const CardSlider = ({ navigation, data }) => {
   
   return (
     <View style={styles.container}>
-      <Text style={styles.cardouthead}>Today's Special Food</Text>
+      <Text style={styles.cardouthead}>Today's Special</Text>
 
       <SafeAreaView>
         <FlatList
@@ -37,7 +37,7 @@ const CardSlider = ({ navigation, data }) => {
               <View style={styles.cardin1}>
                 <Text style={styles.cardin1txt}>{item.FoodName}</Text>
                 <View style={styles.cardin2}>
-                  <Text style={styles.cardin2txt1}>Indian Food</Text>
+                  <Text style={styles.cardin2txt1}>{item.Category}</Text>
                   <Text style={styles.cardin2txt1}>
                     Price -{" "}
                     <Text style={{ textDecorationLine: "line-through" }}>
@@ -46,7 +46,13 @@ const CardSlider = ({ navigation, data }) => {
                     </Text>
                     <Text> {item.FoodPrice}Rs</Text>
                   </Text>
-                  <Text style={styles.cardin2txt3}>{item.FoodType}</Text>
+                  <Text
+                    style={[
+                      item.FoodType === "Veg" ? styles.vegTag : styles.nonVegTag
+                    ]}
+                  >
+                    {item.FoodType}
+                  </Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -64,12 +70,23 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
+  // cardouthead: {
+  //   fontSize: 20,
+  //   fontweight: "600",
+  //   marginHorizontal: 10,
+  //   paddingLeft: 5,
+  //   color: "#424242",
+  // },
   cardouthead: {
     fontSize: 20,
-    fontweight: "600",
-    marginHorizontal: 10,
+    fontWeight: "700",
+    marginHorizontal: 15,
+    marginBottom: 5,
+    color: "black",
     paddingLeft: 5,
-    color: "#424242",
+    borderLeftWidth: 4,
+    backgroundColor:"white",
+    borderLeftColor: "#FFD700",
   },
 
   cardimage: {
@@ -87,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1,
     borderColor: "grey",
-    // backgroundColor: '#dedede'
+    backgroundColor: 'white'
   },
 
   cardin1: {
@@ -114,7 +131,32 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 
-  cardin2txt3: {
+  // cardin2txt3: {
+  //   height: 20,
+  //   borderRadius: 10,
+  //   backgroundColor: "red",
+  //   fontSize: 10,
+  //   fontWeight: "500",
+  //   color: "white",
+  //   textAlign: "center",
+  //   justifyContent: "center",
+  //   paddingHorizontal: 4,
+  // },
+  vegTag: {
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "green",
+    fontSize: 10,
+    fontWeight: "500",
+    color: "white",
+    textAlign: "center",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    overflow: 'hidden',
+    marginLeft: 'auto'
+  },
+  
+  nonVegTag: {
     height: 20,
     borderRadius: 10,
     backgroundColor: "red",
@@ -122,8 +164,10 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "white",
     textAlign: "center",
-    justifyContent: "center",
-    paddingHorizontal: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    overflow: 'hidden',
+    marginLeft: 'auto'
   },
   cardin2txt2: {
     height: 20,

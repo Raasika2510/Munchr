@@ -150,10 +150,8 @@ const UserCartScreen = ({ navigation }) => {
             const orderItemsSnapshot = await getDoc(orderItemsDocRef);
     
             if (orderItemsSnapshot.exists()) {
-                // If it exists, update it
                 await updateDoc(orderItemsDocRef, updatedCartData);
             } else {
-                // If it doesn't exist, create it
                 await setDoc(orderItemsDocRef, updatedCartData);
             }
             await setDoc(orderDocRef, {
@@ -513,47 +511,105 @@ const styles = StyleSheet.create({
     paymentContainer: {
         flex: 1,
         padding: 15,
+        backgroundColor: '#fff',
     },
-    sectionTitle: {
+    // sectionTitle: {
+    //     fontSize: 18,
+    //     fontWeight: '600',
+    //     marginVertical: 10,
+    //     marginLeft: 5,
+    // },
+    // paymentOptionButton: {
+    //     backgroundColor: '#FF3F00',
+    //     paddingHorizontal: 20,
+    //     paddingVertical: 12,
+    //     borderRadius: 20,
+    //     marginHorizontal: 10,
+    // },
+    // paymentOptionText: {
+    //     fontSize: 16,
+    //     fontWeight: '500',
+    //     color: 'white',
+    //     textAlign: 'center',
+    // },
+    // deliverySection: {
+    //     marginTop: 20,
+    //     paddingBottom: 30,
+    // },
+    // locationButton: {
+    //     backgroundColor: '#FF3F00',
+    //     paddingHorizontal: 20,
+    //     paddingVertical: 12,
+    //     borderRadius: 20,
+    //     marginHorizontal: 10,
+    //     marginTop: 10,
+    // },
+    // changeLocationButton: {
+    //     backgroundColor: '#FF3F00',
+    // },
+    // locationButtonText: {
+    //     fontSize: 16,
+    //     fontWeight: '500',
+    //     color: 'white',
+    //     textAlign: 'center',
+    // },
+    // paymentContainer: {
+    //     // backgroundColor: '#fff',
+    //     padding: 16,
+    //     borderRadius: 12,
+    //     //shadowColor: '#000',
+    //     shadowOpacity: 0.1,
+    //     shadowOffset: { width: 0, height: 2 },
+    //     shadowRadius: 4,
+    //     elevation: 4,
+    //     marginBottom: 20,
+    //   },
+      
+      sectionTitle: {
         fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 12,
+        color: '#333',
+      },
+      
+      paymentOptionButton: {
+        backgroundColor: '#4CAF50',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 16,
+      },
+      
+      paymentOptionText: {
+        color: '#fff',
+        fontSize: 16,
         fontWeight: '600',
-        marginVertical: 10,
-        marginLeft: 5,
-    },
-    paymentOptionButton: {
-        backgroundColor: '#FF3F00',
+      },
+      
+      deliverySection: {
+        marginTop: 24,
+      },
+      
+      locationButton: {
+        backgroundColor: '#2196F3',
+        paddingVertical: 10,
         paddingHorizontal: 20,
-        paddingVertical: 12,
-        borderRadius: 20,
-        marginHorizontal: 10,
-    },
-    paymentOptionText: {
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 10,
+      },
+      
+      changeLocationButton: {
+        backgroundColor: '#FF9800',
+      },
+      
+      locationButtonText: {
+        color: '#fff',
         fontSize: 16,
-        fontWeight: '500',
-        color: 'white',
-        textAlign: 'center',
-    },
-    deliverySection: {
-        marginTop: 20,
-        paddingBottom: 30,
-    },
-    locationButton: {
-        backgroundColor: '#FF3F00',
-        paddingHorizontal: 20,
-        paddingVertical: 12,
-        borderRadius: 20,
-        marginHorizontal: 10,
-        marginTop: 10,
-    },
-    changeLocationButton: {
-        backgroundColor: '#FF3F00',
-    },
-    locationButtonText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: 'white',
-        textAlign: 'center',
-    },
+        fontWeight: '600',
+      },
+      
     placeOrderSection: {
         borderTopWidth: 1,
         borderColor: '#e0e0e0',
