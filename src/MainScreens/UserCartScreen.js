@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     paymentHeader: {
-        backgroundColor: '#FF3F00',
+        backgroundColor: '#D32F2F',
         paddingVertical: 15,
         paddingHorizontal: 15,
         marginTop: 30,
@@ -365,6 +365,7 @@ const styles = StyleSheet.create({
     closeText: {
         fontSize: 16,
         color: theme.colors.buttonText,
+        
     },
     container: {
         flex: 1,
@@ -498,7 +499,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     placeOrderButtonMain: {
-        backgroundColor: '#eb242e',
+        backgroundColor: '#D32F2F',
         paddingVertical: 12,
         paddingHorizontal: 25,
         borderRadius: 20,
@@ -513,102 +514,46 @@ const styles = StyleSheet.create({
         padding: 15,
         backgroundColor: '#fff',
     },
-    // sectionTitle: {
-    //     fontSize: 18,
-    //     fontWeight: '600',
-    //     marginVertical: 10,
-    //     marginLeft: 5,
-    // },
-    // paymentOptionButton: {
-    //     backgroundColor: '#FF3F00',
-    //     paddingHorizontal: 20,
-    //     paddingVertical: 12,
-    //     borderRadius: 20,
-    //     marginHorizontal: 10,
-    // },
-    // paymentOptionText: {
-    //     fontSize: 16,
-    //     fontWeight: '500',
-    //     color: 'white',
-    //     textAlign: 'center',
-    // },
-    // deliverySection: {
-    //     marginTop: 20,
-    //     paddingBottom: 30,
-    // },
-    // locationButton: {
-    //     backgroundColor: '#FF3F00',
-    //     paddingHorizontal: 20,
-    //     paddingVertical: 12,
-    //     borderRadius: 20,
-    //     marginHorizontal: 10,
-    //     marginTop: 10,
-    // },
-    // changeLocationButton: {
-    //     backgroundColor: '#FF3F00',
-    // },
-    // locationButtonText: {
-    //     fontSize: 16,
-    //     fontWeight: '500',
-    //     color: 'white',
-    //     textAlign: 'center',
-    // },
-    // paymentContainer: {
-    //     // backgroundColor: '#fff',
-    //     padding: 16,
-    //     borderRadius: 12,
-    //     //shadowColor: '#000',
-    //     shadowOpacity: 0.1,
-    //     shadowOffset: { width: 0, height: 2 },
-    //     shadowRadius: 4,
-    //     elevation: 4,
-    //     marginBottom: 20,
-    //   },
-      
-      sectionTitle: {
+    sectionTitle: {
         fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 12,
-        color: '#333',
-      },
-      
-      paymentOptionButton: {
-        backgroundColor: '#4CAF50',
+        fontWeight: '600',
+        marginVertical: 10,
+        marginLeft: 5,
+    },
+    paymentOptionButton: {
+        backgroundColor: '#D32F2F',
+        paddingHorizontal: 20,
         paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 8,
-        alignItems: 'center',
-        marginBottom: 16,
-      },
-      
-      paymentOptionText: {
-        color: '#fff',
+        borderRadius: 20,
+        marginHorizontal: 10,
+    },
+    paymentOptionText: {
         fontSize: 16,
-        fontWeight: '600',
-      },
-      
-      deliverySection: {
-        marginTop: 24,
-      },
-      
-      locationButton: {
-        backgroundColor: '#2196F3',
-        paddingVertical: 10,
+        fontWeight: '500',
+        color: 'white',
+        textAlign: 'center',
+    },
+    deliverySection: {
+        marginTop: 20,
+        paddingBottom: 30,
+    },
+    locationButton: {
+        backgroundColor: '#D32F2F',
         paddingHorizontal: 20,
-        borderRadius: 8,
-        alignItems: 'center',
-        marginBottom: 10,
-      },
-      
-      changeLocationButton: {
-        backgroundColor: '#FF9800',
-      },
-      
-      locationButtonText: {
-        color: '#fff',
+        paddingVertical: 12,
+        borderRadius: 20,
+        marginHorizontal: 10,
+        marginTop: 10,
+    },
+    changeLocationButton: {
+        backgroundColor: '#D32F2F',
+    },
+    locationButtonText: {
         fontSize: 16,
-        fontWeight: '600',
-      },
+        fontWeight: '500',
+        color: 'white',
+        textAlign: 'center',
+    },
       
     placeOrderSection: {
         borderTopWidth: 1,
@@ -616,7 +561,7 @@ const styles = StyleSheet.create({
         paddingTop: 20,
     },
     placeOrderButton: {
-        backgroundColor: '#FF3F00',
+        backgroundColor: '#D32F2F',
         paddingHorizontal: 20,
         paddingVertical: 12,
         borderRadius: 20,
