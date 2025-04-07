@@ -154,9 +154,9 @@ const ProductScreen = ({ navigation, route }) => {
     <ScrollView style={styles.container}>
       <StatusBar backgroundColor={theme.colors.primary} />
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
-          <Text style={styles.headerText}>Close</Text>
-        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Text style={styles.closeText}>Close</Text>
+                        </TouchableOpacity>
       </View>
 
       <View style={styles.containerIn}>

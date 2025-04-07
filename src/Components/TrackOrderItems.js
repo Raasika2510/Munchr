@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View, Image } from 'react-native'
+import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../Context/AuthContext';
 import {firebase} from '../Firebase/FirebaseConfig'
@@ -65,7 +65,9 @@ const TrackOrderItems = ({ foodDataAll, data, navigation }) => {
 
     console.log("Order Items:",orderData);
     return (
+        <>
         <View>
+            
             {/* <Text>Ye dekh veer</Text> */}
 
             {orderData && orderData.map((order, index) => (
@@ -80,7 +82,6 @@ const TrackOrderItems = ({ foodDataAll, data, navigation }) => {
 
                      renderItem={
                          ({ item }) => {
-                             console.log('ye dekh veer23123123', item)
                              return (
                                  <View style={styles.orderItemContainer}>
                                      <View>
@@ -105,6 +106,7 @@ const TrackOrderItems = ({ foodDataAll, data, navigation }) => {
              </View>
             ))}
         </View>
+        </>
     )
 
     }
@@ -115,6 +117,12 @@ const TrackOrderItems = ({ foodDataAll, data, navigation }) => {
 export default TrackOrderItems
 
 const styles = StyleSheet.create({
+    header: {
+        backgroundColor: theme.colors.primary,
+        paddingVertical: 15,
+        paddingHorizontal: 15,
+        marginTop: 30,
+    },
     orderItemContainer: {
         flexDirection: 'row',
         backgroundColor: theme.colors.background,
