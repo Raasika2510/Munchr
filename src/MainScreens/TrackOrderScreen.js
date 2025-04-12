@@ -8,6 +8,12 @@ import { db } from '../Firebase/FirebaseConfig';
 import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import TrackOrderItems from '../Components/TrackOrderItems'
 
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
+import { Button, Alert } from 'react-native';
+
+
+
 const TrackOrderScreen = ({navigation}) => {
   const { userloggeduid } = useContext(AuthContext);
   
@@ -104,31 +110,85 @@ const TrackOrderScreen = ({navigation}) => {
   console.log("User Orders", orders);
   console.log("Order Items", foodData);
   console.log("Food Data", foodDataAll);
+  
+
+  const generatePDF = async (order, matchedFood) => {
+    try {
+      const htmlContent = `
+        <html>
+          <body>
+            <h1 style="text-align:center;">Order Receipt</h1>
+            <p><strong>Order Id:</strong> ${order.orderid}</p>
+            <p><strong>Time:</strong> 4:10 AM</p>
+            <p><strong>Total:</strong> ₹${order.ordercost}</p>
+          </body>
+        </html>
+      `;
+  
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      console.log('PDF generated at:', uri);
+  
+      if (!(await Sharing.isAvailableAsync())) {
+        Alert.alert('Sharing not available on this device');
+        return;
+      }
+  
+      await Sharing.shareAsync(uri);
+    } catch (err) {
+      console.log('PDF Error:', err);
+      Alert.alert('Error creating PDF');
+    }
+  };
+  
+
 
   return (
     <View style={styles.container}>
       {/* Header Section */}
       <View style={styles.header}>
-        <TouchableOpacity>
-          <Text style={styles.closeText}>Close</Text>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Text style={styles.closeText}>Close</Text>
+      </TouchableOpacity>
       </View>
 
-      <FlatList
-  data={orders}
-  keyExtractor={(order, index) => index.toString()} // Ensure keys are unique
-  renderItem={({ item: order }) => (
-    <View style={styles.mainContainer}>
-      <Text style={styles.orderId}>Order id : {(order.orderid).substring(0,15)}</Text>
-      <Text style={styles.orderTime}>Time : 4:10 AM </Text>
-      <TrackOrderItems foodDataAll={foodDataAll} data={order.orderid} navigation={navigation} />
-      <Text style={styles.orderTotal}>Total: Rs.{order.ordercost}</Text>
-    </View>
-  )}
-/>
-    </View>
-  );
-};
+  <FlatList
+    data={orders}
+    keyExtractor={(order, index) => index.toString()}
+    renderItem={({ item: order }) => {
+
+    
+      return (
+        <View style={styles.mainContainer}>
+          {/* Show Food Image */}
+
+          <Text style={styles.orderTime}>Time : 4:10 AM </Text>
+          <TrackOrderItems foodDataAll={foodDataAll} data={order.orderid} navigation={navigation} />
+          <Text style={styles.orderTotal}>Total: Rs.{order.ordercost}</Text>
+    
+          {/* PDF Button */}
+          <View style={{ paddingHorizontal: 10, paddingBottom: 10 }}>
+          <TouchableOpacity
+            onPress={() => generatePDF(order)}
+            style={{
+              backgroundColor: '#d32f2f', 
+              padding: 10,
+              borderRadius: 8,
+              alignItems: 'center',
+              marginTop: 10
+            }}
+          >
+          <Text style={{ color: '#fff', fontWeight: 'bold' }}>
+            Download Receipt PDF
+          </Text>
+          </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }}
+  />
+      </View>
+    );
+  };
 
 export default TrackOrderScreen;
 

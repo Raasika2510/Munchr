@@ -1,7 +1,7 @@
 import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Image, FlatList, Alert } from 'react-native';
 import React, { useEffect, useContext, useState } from 'react';
 import theme from '../../theme';
-import { AuthContext } from '../Context/AuthContext';
+import { AuthContext } from '../Context/AuthContext'; 
 import { db } from '../Firebase/FirebaseConfig';
 import { doc, getDoc, collection, getDocs, updateDoc, arrayRemove, deleteField, setDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
@@ -265,12 +265,8 @@ const UserCartScreen = ({ navigation }) => {
                                 return foodItem ? (
                                     <View style={styles.containerCardList}>
                                         <View style={styles.containerCard}>
-                                            {/* <Image 
-                                                source={foodItem.image ? { uri: foodItem.image } : require('../Images/default-food.jpg')} 
-                                                style={styles.cardimage} 
-                                            /> */}
-                                            <Image source={require('../Images/spaghetti.jpg')} style={styles.cardimage} />
-
+                                            {/* <Image source={require('../Images/spaghetti.jpg')} style={styles.cardimage} /> */}
+                                            <Image source={{ uri: foodItem.image }} style={styles.cardimage} />
                                             
                                             <View style={styles.containerCard_in}>
                                                 <View style={styles.containerCard_in1}>
