@@ -5,6 +5,8 @@ import { AuthContext } from '../Context/AuthContext';
 import { db } from '../Firebase/FirebaseConfig';
 import { doc, getDoc, collection, getDocs, updateDoc, arrayRemove, deleteField, setDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
+import { getAuth } from 'firebase/auth'; 
+
 
 const UserCartScreen = ({ navigation }) => {
     const { userloggeduid } = useContext(AuthContext);
@@ -17,6 +19,8 @@ const UserCartScreen = ({ navigation }) => {
     const [deliveryCharges, setDeliveryCharges] = useState('0');
     const [paymentpage, setPaymentPage] = useState(false);
     const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+    const auth = getAuth(); // ADD THIS
+const userEmail = auth.currentUser?.email || '';
 
     // Fetch Cart Data
     const cardDataHandler = async () => {
@@ -165,6 +169,36 @@ const UserCartScreen = ({ navigation }) => {
             }, { merge: true });
 
             await deleteCart();
+
+            console.log("Sending email to:", userEmail);
+
+try {
+  const response = await fetch('http://192.168.1.4:3001/send-order-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      toEmail: userEmail,
+      orderId: docid,
+      orderItems: cartData.cartItems,
+      totalCost: totalCost,
+    }),
+  });
+
+  const resultText = await response.text();
+
+  try {
+    const result = JSON.parse(resultText);
+    console.log("Email response:", result);
+  } catch (jsonError) {
+    console.error("JSON parsing error:", jsonError.message);
+    console.log("Raw response:", resultText);
+  }
+} catch (error) {
+  console.error("Order placement error:", error);
+}
+
     
             console.log("Order placed successfully!");
             Alert.alert("Order Successful", "Your order has been placed successfully!");

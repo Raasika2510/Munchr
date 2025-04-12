@@ -4,6 +4,7 @@ import { useFonts, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } fr
 import { FontAwesome } from "@expo/vector-icons";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import theme from "../../theme"; // Ensure `theme.js` exists and is correctly exported
+import { AuthContext } from "../Context/AuthContext";
 
 
 const SignScreen = ({ navigation}) => {
